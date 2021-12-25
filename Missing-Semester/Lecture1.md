@@ -132,6 +132,18 @@ Thu, 09 Dec 2021 04:11:14 GMT
 
 >>When a text file with a shebang is used as if it is an executable in a Unix-like operating system, the program loader mechanism parses the rest of the file's initial line as an interpreter directive. The loader executes the specified interpreter program, passing to it as an argument using the path that was initially used when attempting to run the script, so that the program may use the file as input data.[8] For example, if a script is named with the path path/to/script, and it starts with the following line, #!/bin/sh, then the program loader is instructed to run the program /bin/sh, passing path/to/script as the first argument. In Linux, this behavior is the result of both kernel and user-space code.[9]
 
+在 shell(Bash 是一种 shell) 中执行外部程序和脚本时，Linux 内核会启动一个新的进程，以便在新的进程中执行指定的程序或脚本。内核知道该如何为编译型的程序做这件事，但是对于脚本程序呢？当 shell 要求内核执行一个脚本文件时，内核是不知道该怎么办的！所以它回应一个 "not executable format file" 的错误消息。Shell 收到这样的消息后会做出类似下面的判断：这不是个编译型程序，那它肯定是一个 shell 脚本；接着就启动一个新的 /bin/sh 副本来这些该程序。
+
+当系统中只有一个 shell(/bin/sh) 时这并没有什么问题。但是当前的系统中一般都存在多个 shell，比如 Bash、Dash等等。因此需要通过一种方式，告诉 Linux 内核应该以哪个 shell 来执行指定的脚本。实时上，这么做有助于执行机制的通用化，让用户可以直接引用任何的程序语言解释器，而不仅仅是一个 shell。具体的方法是通过脚本文件中特殊的第一行来设置：在第一行的开头处使用 #! 这两个字符(英文一般称为 shebang)。
+
+当一个脚本中第一行是以 #! 这两个字符开头时，内核会扫描该行的其余部分，看是否可以找到可以用来执行该脚本文件的解释器。所以这是一种非常通用的做法，因为除了 shell 我们还可以指定其它的解释器，比如：
+
+```shell
+#!/usr/bin/awk
+# 这个脚本是一个 awk 程序
+```
+[参考博客](https://www.cnblogs.com/sparkdev/p/9843024.html)
+
 >10.Write a command that reads out your laptop battery’s power level or your desktop machine’s CPU temperature from /sys. Note: if you’re a macOS user, your OS doesn’t have sysfs, so you can skip this exercise.
 
 由于我使用的是Ubuntu虚拟机，似乎好像找不到相应文件......但也不确定，如果大家有思路可以教我一下。
