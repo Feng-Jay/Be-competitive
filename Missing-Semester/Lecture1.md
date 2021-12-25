@@ -4,8 +4,6 @@
 
 课上提到了很多命令的使用和权限问题。在此不一一赘述，令我印象较深的是关于 `权限与连接`的问题和目录文件的执行权限的概念。
 
-对于一个`directory`即目录文件的执行权限是很重要的。我们进入一个目录文件其实就需要拥有`x`执行权限。
-
 例如：
 
 ```shell
@@ -19,6 +17,121 @@ sudo echo 3 > brightness
 
 所以此时`echo`程序是以super user的权限执行的，但对`brightness`文件的写仍是以普通用户的权限进行的，导致ERROR。
 
+其次就是对于一个`directory`即目录文件的执行权限是很重要的。我们进入一个目录文件其实就需要拥有`x`执行权限。
+
 ## Solutions to Exercises
 
 >1.Create a new directory called missing under /tmp.
+
+```shell
+cd /tmp
+mkdir missing
+```
+
+>2.Look up the touch program. The man program is your friend.
+
+我们可以使用如下命令查看`touch`的man手册
+
+```shell
+man touch
+```
+>3.Use touch to create a new file called semester in missing.
+
+```shell
+touch /tmp/missing/semester
+```
+
+>4.Write the following into that file, one line at a time: 
+>>```shell
+>>#!/bin/sh
+>>curl --head --silent https://missing.csail.mit.edu
+>>```
+
+这里的主要问题出现在第一行，如何处理`!`字符，通过查看网站给出的[手册](https://www.gnu.org/software/bash/manual/html_node/Single-Quotes.html)，可以了解到由`''`括起来的字符串的所有字符都会被解释为普通的字符含义, 即使用:
+```shell
+echo '#!/bin/sh' > semester
+```
+
+之前还想使用`""`括起来的字符串，通过一个`\`将`!`转义一下，但根据[手册](https://www.gnu.org/software/bash/manual/html_node/Double-Quotes.html)内容, 这样处理的`!`前的`\`并不会被消除，所以这个方法被PASS掉了。
+
+对于第二行而言使用上述方法应该也很容易解决。课余时间阅读一下[Bash History](https://www.gnu.org/software/bash/manual/html_node/Bash-History-Facilities.html)的内容。
+
+>5.Try to execute the file, i.e. type the path to the script (./semester) into your shell and press enter. Understand why it doesn’t work by consulting the output of ls (hint: look at the permission bits of the file).
+
+通过按照题目执行文件，发现结果如下：
+
+```shell
+ffengjay@MitLab:/tmp/missing$ ./semester
+bash: ./semester: 权限不够
+```
+通过`ls -l`命令发现权限如下:
+```shell
+-rw-rw-r-- 1 ffengjay ffengjay 61 12月 25 15:19 semester
+```
+发现是因为我们并没有执行权限导致无法直接运行脚本
+
+>6.Run the command by explicitly starting the sh interpreter, and giving it the file semester as the first argument, i.e. sh semester. Why does this work, while ./semester didn’t?
+
+通过执行 `sh semester`发现结果如下：
+```shell
+ffengjay@MitLab:/tmp/missing$ sh semester
+HTTP/2 200 
+server: GitHub.com
+content-type: text/html; charset=utf-8
+last-modified: Thu, 09 Dec 2021 04:11:14 GMT
+access-control-allow-origin: *
+etag: "61b181e2-1f31"
+expires: Mon, 20 Dec 2021 10:45:19 GMT
+cache-control: max-age=600
+x-proxy-cache: MISS
+x-github-request-id: 673E:0AB9:2F9AB5:3264A6:61C05C67
+accept-ranges: bytes
+date: Sat, 25 Dec 2021 07:21:18 GMT
+via: 1.1 varnish
+age: 0
+x-served-by: cache-hnd18723-HND
+x-cache: HIT
+x-cache-hits: 1
+x-timer: S1640416878.939350,VS0,VE149
+vary: Accept-Encoding
+x-fastly-request-id: 5615e48b91cf38f2b84b4579f5acceca28266cbe
+content-length: 7985
+```
+通过[STFW](https://stackoverflow.com/questions/42712407/why-shell-script-wont-run-when-executed-directly-but-runs-with-usr-bin-sh-or)
+可以得知对于sh脚本我们是拥有执行权限的:
+```shell
+lrwxrwxrwx 1 root root 4 9月  13 22:47 /usr/bin/sh -> dash
+```
+所以可以使用一个类似“借壳”的方式执行脚本
+
+>7.Look up the chmod program (e.g. use man chmod).
+通过如下命令可以得知chmod可用来改变文件权限
+```shell
+man chmod
+```
+
+>8.Use chmod to make it possible to run the command ./semester rather than having to type sh semester. How does your shell know that the file is supposed to be interpreted using sh? See this page on the shebang line for more information.
+
+通过使用如下命令让我们拥有执行权限:
+```shell
+ffengjay@MitLab:/tmp/missing$ chmod 764 semester
+```
+
+
+
+>9.Use | and > to write the “last modified” date output by semester into a file called last-modified.txt in your home directory.
+
+通过`man`手册查阅`grep`命令和`cut`命令对shell脚本执行结果进行处理，将结果重定向到指定TXT文件
+
+```shell
+ffengjay@MitLab:/tmp/missing$ ./semester | grep --ignore-case last-modified | cut -c 16-  > last-modified.txt
+ffengjay@MitLab:/tmp/missing$ cat last-modified.txt 
+Thu, 09 Dec 2021 04:11:14 GMT
+```
+`wikipedia`上的解释是:
+
+>When a text file with a shebang is used as if it is an executable in a Unix-like operating system, the program loader mechanism parses the rest of the file's initial line as an interpreter directive. The loader executes the specified interpreter program, passing to it as an argument using the path that was initially used when attempting to run the script, so that the program may use the file as input data.[8] For example, if a script is named with the path path/to/script, and it starts with the following line, #!/bin/sh, then the program loader is instructed to run the program /bin/sh, passing path/to/script as the first argument. In Linux, this behavior is the result of both kernel and user-space code.[9]
+
+>10.Write a command that reads out your laptop battery’s power level or your desktop machine’s CPU temperature from /sys. Note: if you’re a macOS user, your OS doesn’t have sysfs, so you can skip this exercise.
+
+由于我使用的是Ubuntu虚拟机，似乎好像找不到相应文件......但也不确定，如果大家有思路可以教我一下。
