@@ -6,7 +6,7 @@
 
 例如：
 
-```shell
+```bash
 sudo echo 3 > brightness
 ```
 程序此时并不会正常执行，反而会报错 
@@ -23,7 +23,7 @@ sudo echo 3 > brightness
 
 >1.Create a new directory called missing under /tmp.
 
-```shell
+```bash
 cd /tmp
 mkdir missing
 ```
@@ -32,23 +32,23 @@ mkdir missing
 
 我们可以使用如下命令查看`touch`的man手册
 
-```shell
+```bash
 man touch
 ```
 >3.Use touch to create a new file called semester in missing.
 
-```shell
+```bash
 touch /tmp/missing/semester
 ```
 
 >4.Write the following into that file, one line at a time: 
->>```shell
+>>```bash
 >>#!/bin/sh
 >>curl --head --silent https://missing.csail.mit.edu
 >>```
 
 这里的主要问题出现在第一行，如何处理`!`字符，通过查看网站给出的[手册](https://www.gnu.org/software/bash/manual/html_node/Single-Quotes.html)，可以了解到由`''`括起来的字符串的所有字符都会被解释为普通的字符含义, 即使用:
-```shell
+```bash
 echo '#!/bin/sh' > semester
 ```
 
@@ -60,12 +60,12 @@ echo '#!/bin/sh' > semester
 
 通过按照题目执行文件，发现结果如下：
 
-```shell
+```bash
 ffengjay@MitLab:/tmp/missing$ ./semester
 bash: ./semester: 权限不够
 ```
 通过`ls -l`命令发现权限如下:
-```shell
+```bash
 -rw-rw-r-- 1 ffengjay ffengjay 61 12月 25 15:19 semester
 ```
 发现是因为我们并没有执行权限导致无法直接运行脚本
@@ -73,7 +73,7 @@ bash: ./semester: 权限不够
 >6.Run the command by explicitly starting the sh interpreter, and giving it the file semester as the first argument, i.e. sh semester. Why does this work, while ./semester didn’t?
 
 通过执行 `sh semester`发现结果如下：
-```shell
+```bash
 ffengjay@MitLab:/tmp/missing$ sh semester
 HTTP/2 200 
 server: GitHub.com
@@ -99,21 +99,21 @@ content-length: 7985
 ```
 通过[STFW](https://stackoverflow.com/questions/42712407/why-shell-script-wont-run-when-executed-directly-but-runs-with-usr-bin-sh-or)
 可以得知对于sh脚本我们是拥有执行权限的:
-```shell
+```bash
 lrwxrwxrwx 1 root root 4 9月  13 22:47 /usr/bin/sh -> dash
 ```
 所以可以使用一个类似“借壳”的方式执行脚本
 
 >7.Look up the chmod program (e.g. use man chmod).
 通过如下命令可以得知chmod可用来改变文件权限
-```shell
+```bash
 man chmod
 ```
 
 >8.Use chmod to make it possible to run the command ./semester rather than having to type sh semester. How does your shell know that the file is supposed to be interpreted using sh? See this page on the shebang line for more information.
 
 通过使用如下命令让我们拥有执行权限:
-```shell
+```bash
 ffengjay@MitLab:/tmp/missing$ chmod 764 semester
 ```
 
@@ -123,7 +123,7 @@ ffengjay@MitLab:/tmp/missing$ chmod 764 semester
 
 通过`man`手册查阅`grep`命令和`cut`命令对shell脚本执行结果进行处理，将结果重定向到指定TXT文件
 
-```shell
+```bash
 ffengjay@MitLab:/tmp/missing$ ./semester | grep --ignore-case last-modified | cut -c 16-  > last-modified.txt
 ffengjay@MitLab:/tmp/missing$ cat last-modified.txt 
 Thu, 09 Dec 2021 04:11:14 GMT
@@ -138,7 +138,7 @@ Thu, 09 Dec 2021 04:11:14 GMT
 
 当一个脚本中第一行是以 #! 这两个字符开头时，内核会扫描该行的其余部分，看是否可以找到可以用来执行该脚本文件的解释器。所以这是一种非常通用的做法，因为除了 shell 我们还可以指定其它的解释器，比如：
 
-```shell
+```bash
 #!/usr/bin/awk
 # 这个脚本是一个 awk 程序
 ```
