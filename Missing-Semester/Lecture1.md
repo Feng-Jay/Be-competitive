@@ -1,4 +1,4 @@
-# Lecture one's note and solutions to exercises
+# Lec1's notes and exercises' solutions
 
 ## Notes
 
