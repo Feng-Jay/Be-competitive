@@ -34,9 +34,59 @@ mcd () {
 
 *****
 
-**如何在脚本中调用其他命令为变量**
+**如何将命令输出进行存储**
 
-可以使用 `$(CMD)`的形式，它会执行`CMD`然后将执行结果替换在相应的位置。
+将输出存入变量中，可以使用 `$(CMD)`的形式，它会执行`CMD`然后将执行结果替换在相应的位置。
+
+```bash
+foo=$(pwd)
+echo "foo"
+*output: /root/Be-competitive/examples*
+```
+
+将命令输出存为临时文件, 可以使用 `<(CMD)`, 会执行`CMD`并将输出存入一个临时文件。
+
+```bash
+cat <(ls) <(ls ..)
+*output: 
+mcd.sh
+test.txt
+examples
+Missing-Semester
+README.md*
+```
+
+## 匹配与脚本运行
+
+`shell`中也有着通配符，分别为`?`与`*`，前者可以匹配1个任意字符，后者可以代表任意长度的任意字符。*与c类似*
+
+`shell`中的`{}`可以用来扩展命令,example:
+
+```bash
+convert image.{png,jpg}
+# Will expand to
+convert image.png image.jpg
+
+cp /path/to/project/{foo,bar,baz}.sh /newpath
+# Will expand to
+cp /path/to/project/foo.sh /path/to/project/bar.sh /path/to/project/baz.sh /newpath
+
+# Globbing techniques can also be combined
+mv *{.py,.sh} folder
+# Will move all *.py and *.sh files
+
+
+mkdir foo bar
+# This creates files foo/a, foo/b, ... foo/h, bar/a, bar/b, ... bar/h
+touch {foo,bar}/{a..h}
+touch foo/x bar/y
+# Show differences between files in foo and bar
+diff <(ls foo) <(ls bar)
+# Outputs
+# < x
+# ---
+# > y
+```
 
 
 
