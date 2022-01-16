@@ -17,9 +17,13 @@
 **This week's schedule**
 
 > 8:30~11:30  Memorize English and read assay
+
 > 14:00~17:00 Coding something about AI/NN
+
 > 18:30~20:30 Learning Lessons and complete some dues
+
 > 20:30~21:30 Doing sports
+
 > 22:00~24:00 Call my girl♥ 
 
 ## Thanks
