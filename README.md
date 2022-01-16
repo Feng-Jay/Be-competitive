@@ -6,3 +6,7 @@
 
 - [ ] [MIT-Missing-Semester](https://missing.csail.mit.edu/)
 
+- [ ] [CS106L: Standard C++ Programming](http://web.stanford.edu/class/cs106l/)
+
+- [ ] [CS 110L: Safety in Systems Programming](https://reberhardt.com/cs110l/spring-2020/)
+
