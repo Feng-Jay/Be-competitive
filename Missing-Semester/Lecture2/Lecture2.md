@@ -158,6 +158,90 @@ find . -name '*.png' -exec convert {} {}.jpg \;
 
 ## Exercises
 
+**Q1**. Read man ls and write an ls command that lists files in the following manner
+
+- Includes all files, including hidden files
+
+- Sizes are listed in human readable format (e.g. 454M instead of 454279954)
+
+- Files are ordered by recency
+
+- Output is colorized
+
+**Ans1:**
+
+```bash
+ls -l -a -h -t 
+```
+
+**Q2**.Write bash functions `marco` and `polo` that do the following. Whenever you execute `marco` the current working directory should be saved in some manner, then when you execute `polo`, no matter what directory you are in, `polo` should `cd` you back to the directory where you executed marco. For ease of debugging you can write the code in a file `marco.sh` and (re)load the definitions to your shell by executing `source marco.sh`.
+
+*marco.sh:*
+
+```bash
+marco() {
+    marco_dir=$(pwd)
+    echo "I'm in $marco_dir."
+}
+```
+
+*polo.sh*
+
+```bash
+polo() {
+    echo "From $(pwd)"
+    cd $marco_dir || exit
+    echo "To $(pwd)"
+}
+```
+
+**Q3**Say you have a command that fails rarely. In order to debug it you need to capture its output but it can be time consuming to get a failure run. Write a bash script that runs the following script until it fails and captures its standard output and error streams to files and prints everything at the end. Bonus points if you can also report how many runs it took for the script to fail.
+
+The command mentioned above:
+
+```bash
+#!/usr/bin/env bash
+
+ n=$(( RANDOM % 100 ))
+
+ if [[ n -eq 42 ]]; then
+    echo "Something went wrong"
+    >&2 echo "The error was using magic numbers"
+    exit 1
+ fi
+
+ echo "Everything went according to plan"
+```
+
+**Ans3:**
+
+```bash
+#!/usr/bin/env bash
+
+echo "begin test" > run.log
+
+time=0
+
+while [[ $? -eq 0 ]]; do
+    let time++
+    echo "failed at $time times" > error.log
+    source ./random.sh 1>>run.log 2>>error.log
+done 
+```
+
+**Q4**Your task is to write a command that recursively finds all HTML files in the folder and makes a zip with them. Note that your command should work even if the files have spaces (hint: check -d flag for xargs).
+
+**Ans4:**
+```bash
+find ~/Be-competitive/Missing-Semester/Lecture2/html -name "*.html" | xargs -d "\n" tar -czf html.tar.gz
+```
+
+**Q5**(Advanced) Write a command or script to recursively find the most recently modified file in a directory. More generally, can you list all files by recency?
+
+
+
+
+
 
 
 
