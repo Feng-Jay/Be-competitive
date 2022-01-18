@@ -238,6 +238,26 @@ find ~/Be-competitive/Missing-Semester/Lecture2/html -name "*.html" | xargs -d "
 
 **Q5**(Advanced) Write a command or script to recursively find the most recently modified file in a directory. More generally, can you list all files by recency?
 
+**Ans5:**
+
+
+
+```bash
+#!/usr/bin/env bash
+
+if [[ -d $1 ]]
+then 
+    echo "Directory exists"
+    ls ./$1 -a -l -t -h | head -n 2
+else 
+    echo "ERROR! Please input correct directory file"
+fi
+```
+
+**如果想要输出所有文件的话就把管道后面的`head`命令删除**
+
+
+
 
 
 
