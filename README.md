@@ -16,15 +16,17 @@
 
 **This week's schedule**
 
-> 8:30~11:30  Memorize English and read assay
+> 8:30~11:30  Memorize English and Learn lessons
 
 > 14:00~17:00 Coding something about AI/NN
 
-> 18:30~20:30 Learning Lessons and complete some dues
+> 17:00~18:00 Fitness Gaming 
 
-> 20:30~21:30 Doing sports
+> 18:30~20:00 Programming and solve dues
 
-> 22:00~24:00 Call my girl♥ 
+> 20:00~21:00 Meetings 
+
+> 21:00~24:00 Memorize English and Chat with my girl 
 
 ## Thanks
 
