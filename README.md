@@ -22,11 +22,13 @@
 
 > 17:00~18:00 Fitness Gaming 
 
-> 18:30~20:00 Programming and solve dues
+> 18:30~19:00 Have fun
 
-> 20:00~21:00 Meetings 
+> 19:00~20:00 Meetings
 
-> 21:00~24:00 Memorize English and Chat with my girl 
+> 20:00~22:30 Programming and solve some dues 
+
+> 22:30~24:00 Memorize English and Chat with my girl 
 
 ## Thanks
 
