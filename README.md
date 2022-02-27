@@ -12,6 +12,9 @@
 
 - [ ] [CMU 15-213: CSAPP](http://csapp.cs.cmu.edu/)
 
+- [ ] [ysyx_study](https://docs.ysyx.org/schedule.html)
+
+
 ## Winter Holiday Schedule
 
 **This week's schedule**
