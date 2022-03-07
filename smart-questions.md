@@ -22,8 +22,30 @@
 
 * I've posted my question in $LANGUAGE and English. I'll be glad to translate responses, if you only use one or the other.
 
+* Describe the symptoms of your problem or bug carefully and clearly.
 
+Describe the environment in which it occurs,Provide your vendor's distribution and release level.
 
+Describe the research you did to try and understand the problem before you asked the question.
 
+Describe the diagnostic steps you took to try and pin down the problem yourself before you asked the question.
+
+Describe any possibly relevant recent changes in your computer or software configuration.
+
+If at all possible, provide a way to reproduce the problem in a controlled environment.
+
+* It's not useful to tell hackers what you think is causing your problem. Make sure you're telling them the raw symptoms of what goes wrong, rather than your interpretations and theories.
+
+* People who need technical help have a high-level goal in mind and get stuck on what they think is one particular path towards the goal. They come for help with the step, but don't realize that the path is wrong. 
+
+* E-mail me and I'll summarize the answers for the group
+
+* Posting a dozen lines of code, saying "after line 7 I was expecting to see <x>, but <y> occurred instead" is much more likely to get you a response.
+
+* Send a note after the problem has been solved to all who helped you.
+
+* If you're after information rather than entertainment, it's better to keep your fingers off the keyboard than to risk this.
+
+* 
 
 
