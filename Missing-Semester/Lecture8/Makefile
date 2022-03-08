@@ -5,4 +5,4 @@ plot-%.png: %.dat plot.py
 	./plot.py -i $*.dat -o $@
 .PHONY: clean
 clean: 
-	rm *.o temp
+	git ls-files -o | xargs rm -f
