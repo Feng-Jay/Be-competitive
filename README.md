@@ -4,7 +4,7 @@
 
 ## 目前正在学习的课程
 
-- [ ] [MIT-Missing-Semester](https://missing.csail.mit.edu/)
+- [x] [MIT-Missing-Semester](https://missing.csail.mit.edu/)
 
 - [ ] [CS 106L: Standard C++ Programming](http://web.stanford.edu/class/cs106l/)
 
