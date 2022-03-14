@@ -72,3 +72,8 @@ void RealVector<type>:: insert(size_t pos, const type &add){
 	// pos = index + begin();
 
 }
+
+template <class type>
+void RealVector<type>::push_back(const type &pub){
+	insert(size(), pub);
+}

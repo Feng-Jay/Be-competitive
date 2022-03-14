@@ -18,6 +18,7 @@ class RealVector{
 		const_iterator cbegin() const;
 		const_iterator cend() const;
 		void insert(size_t pos, const type & add);
+		void push_back(const type & pub);
 	private:
 		type* elems;
 		size_t logical_size;
