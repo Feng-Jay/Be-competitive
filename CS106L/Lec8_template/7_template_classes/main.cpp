@@ -8,7 +8,7 @@ using std::string; using std:: endl;
 void printVec(const RealVector<int>& vec){
 	cout << "{ ";
 	for(auto it = vec.cbegin(); it != vec.cend(); ++it){
-		cout << *it << endl;
+		cout << *it ;
 	}
 	cout << " }" << endl;
 }

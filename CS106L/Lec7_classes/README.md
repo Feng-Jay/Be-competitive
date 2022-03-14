@@ -82,7 +82,7 @@ It is a class that is parametrized over some number of types. A class that is co
 Almost all containers are `Template class`.
 
 ```cpp
-template<typename First, typename Second> class MyPair { public:
+template<class First, class Second> class MyPair { public:
 		First getFirst(); 
 		Second getSecond();
 		/*...*/
