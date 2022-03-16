@@ -19,6 +19,20 @@ void Fraction::reduce() {
     denom /= gcd;
 }
 
+bool Fraction::operator<(const Fraction& rhs) const{
+    return rhs.denom * num < denom * rhs.num;
+}
+
+bool Fraction::operator>(const Fraction& rhs) const{
+    return rhs.denom * num > denom * rhs.num;
+}
+
+Fraction Fraction::operator-(const Fraction& rhs) const{
+    int temp = num * rhs.denom - rhs.num * denom;
+    int temp2 = denom * rhs.denom;
+    return Fraction(temp, temp2);
+}
+
 int main() {
 
     // creating a few fractions:
