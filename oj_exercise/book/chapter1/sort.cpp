@@ -110,13 +110,43 @@ void merge(int* list, int len)
     delete [] b;
 }
 
+//quick sort
+void quick(int* list, int l, int r)
+{
+    if(l<r){
+        int i = l; int j = r; 
+        int temp = list[l];
+        while(i < j){
+            while(i < j && list[j] >= temp)
+                --j;
+            if(i < j)
+                list[i++] = list[j];
+            while(i<j && list[i] < temp)
+                ++i;
+            if(i<j)
+                list[j--] = list[i];
+        }
+        list[i] = temp;
+        quick(list,l, i-1);
+        quick(list,i+1,r);
+    }
+}
+
+//stl sort
+void stls(int* list, int len)
+{
+    std:: sort(list, list+len);
+}
+
 int main(){
     int list[5] = {5,4,6,4,1};
     // bubble(list,5);
     // select(list,5);
     // insert(list,5);
     // shell(list,5);
-    merge(list,5);
+    // merge(list,5);
+    // quick(list,0,4);
+    stls(list,5);
     for(int i=0; i<4;++i){
         cout<<list[i]<<" ";
     }
