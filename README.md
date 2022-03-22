@@ -6,30 +6,30 @@
 
 - [x] [MIT-Missing-Semester](https://missing.csail.mit.edu/)
 
-- [ ] [CS 106L: Standard C++ Programming](http://web.stanford.edu/class/cs106l/)
+- [x] [CS 106L: Standard C++ Programming](http://web.stanford.edu/class/cs106l/)
 
 - [ ] [CS 110L: Safety in Systems Programming](https://reberhardt.com/cs110l/spring-2020/)
 
-- [ ] [CMU 15-213: CSAPP](http://csapp.cs.cmu.edu/)
-
-- [ ] [ysyx_study](https://docs.ysyx.org/schedule.html)
+- [x] [CMU 15-213: CSAPP](http://csapp.cs.cmu.edu/)
 
 
-## Winter Holiday Schedule
+## Spring Semester Schedule
 
 **This week's schedule**
 
-> 8:30~11:30  Memorize English and Learn lessons
+> 7:30~9:00  Memorize English
 
-> 14:00~17:00 Coding something about AI/NN
+> 9:00~11:30 Reading CSAPP
 
-> 17:00~18:00 Fitness Gaming 
+> 13:00~17:00 NSCSCC & Paper
 
-> 18:30~19:00 Have fun
+> 17:00~18:00 Running
 
-> 19:00~20:00 Meetings
+> 18:30~19:00 Eating
 
-> 20:00~22:30 Programming and solve some dues 
+> 19:00~20:00 Solve dues
+
+> 20:00~22:30 Doing some OJ problems 
 
 > 22:30~24:00 Memorize English and Chat with my girl 
 
