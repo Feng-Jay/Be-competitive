@@ -8,9 +8,14 @@
 
 - [x] [CS 106L: Standard C++ Programming](http://web.stanford.edu/class/cs106l/)
 
+- [ ] [Data Structure](https://github.com/yingxiangyu/data_structure)
+
 - [ ] [CS 110L: Safety in Systems Programming](https://reberhardt.com/cs110l/spring-2020/)
 
 - [x] [CMU 15-213: CSAPP](http://csapp.cs.cmu.edu/)
+
+- [ ] [Computer Architecture AQA](https://www.ituring.com.cn/book/2632) 
+
 
 
 ## Spring Semester Schedule
