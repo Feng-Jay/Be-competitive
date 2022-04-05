@@ -1,3 +1,5 @@
+#ifndef _LIST_
+#define _LIST_
 #include "listNode.h"
 
 template <typename T> class List{
@@ -15,9 +17,9 @@ template <typename T> class List{
         void insertionsort(ListNodePosi(T), int);
     public:
         // constructor
-        List(){init()};
+        List(){init();};
         List(List<T> const& L); // copy L
-        List(List<T> const& L, Rank n, int n);// copy start from L's r to r+n-1
+        List(List<T> const& L, Rank r, int n);// copy start from L's r to r+n-1
         List(ListNodePosi(T) p, int n);// copy from p to p+n
 
         // destructor
@@ -41,14 +43,14 @@ template <typename T> class List{
         ListNodePosi(T) find(T const& e) const{
             return find(e, _size, tailer);
         }
-        ListNodePosi(T) find(T const&3, int n, ListNodePosi(T) p) const;
+        ListNodePosi(T) find(T const&e, int n, ListNodePosi(T) p) const;
 
         ListNodePosi(T) search(T const& e) const
         {return search(e, _size, tailer);}
         ListNodePosi(T) search(T const& e, int n, ListNodePosi(T) p) const;
 
-        ListNodePosi(T) selectmax(ListNodePosi(T) p, int n);
-        ListNodePosi(T) selectmax(){return selectmax(header->succ, _size);}
+        ListNodePosi(T) selectmin(ListNodePosi(T) p, int n);
+        ListNodePosi(T) selectmin(){return selectmin(header->succ, _size);}
 
         // writable function
         ListNodePosi(T) insertAsFirst(T const& e);
@@ -59,7 +61,7 @@ template <typename T> class List{
 
         T remove(ListNodePosi(T) p); // delete p's node, return it
 
-        void merge(List<T>& L){merge(first(),size, L, L.first(), L._size);}
+        void merge(List<T>& L){merge(first(),size(), L, L.first(), L._size);}
         void sort(ListNodePosi(T) p, int n);
         void sort() {sort(first(), _size);}
 
@@ -68,7 +70,9 @@ template <typename T> class List{
         void reverse();
 
         // travel
-        void traverse(void(*)(T&));
+        void traverse(void(*visit)(T&));
         template<typename VST>
         void traverse(VST&);
-}
+};
+#include "list.cpp"
+#endif

@@ -1,10 +1,13 @@
+#ifndef _LIST_NODE_
+#define _LIST_NODE_
 #include <iostream>
-
+#include <stdio.h>
 typedef int Rank;
 
 #define ListNodePosi(T) ListNode<T>*
 
-template <typename T> struct ListNode{
+template <typename T> 
+struct ListNode{
     // member variables
     T data;
     ListNodePosi(T) pred;// pre
@@ -19,3 +22,5 @@ template <typename T> struct ListNode{
     ListNodePosi(T) insertAsPred(T const& e);// insert before this node
     ListNodePosi(T) insertAsSucc(T const& e);// insert after this node
 };
+#include "listNode.cpp"
+#endif
