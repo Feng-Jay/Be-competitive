@@ -121,7 +121,7 @@ void List<T>:: traverse(void (*visit)(T&)){
 // double pointer
 template <typename T>
 int List<T>:: uniquify(){
-    if(_size<2) return;
+    if(_size<2) return 0;
     int oldsize = _size;
     ListNodePosi(T) p =first();
     ListNodePosi(T) q = p->succ;
