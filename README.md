@@ -24,19 +24,15 @@
 
 > 7:30~9:00  Memorize English
 
-> 9:00~11:30 Reading CSAPP
+> 9:00~11:30 Implement data structure books.
 
-> 13:00~17:00 NSCSCC & Paper
+> 13:30~17:00 NSCSCC or Paper or class, maybe dues if necessary. 
 
-> 17:00~18:00 Running
+> 18:00~20:00 Dues and class design 
 
-> 18:30~19:00 Eating
+> 20:00~21:00 Running
 
-> 19:00~20:00 Solve dues
-
-> 20:00~22:30 Doing some OJ problems 
-
-> 22:30~24:00 Memorize English and Chat with my girl 
+> 21:30~23:30 time to coding(oj or dues) and talking or relaxing. 
 
 ## Thanks
 
