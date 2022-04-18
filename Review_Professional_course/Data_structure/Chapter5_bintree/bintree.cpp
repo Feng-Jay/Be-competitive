@@ -47,7 +47,8 @@ BinNodePosi(T) Bintree<T>::attachAsLC(BinNodePosi(T) x, Bintree<T>* &s )
     _size+= s->_size; 
     updateHeightAbove(x);
     s->_root =NULL; s->_size = 0;
-    delete s; s=NULL;
+    // delete s; 
+    s=NULL;
     return x;
 }
 template <typename T>
@@ -58,11 +59,11 @@ BinNodePosi(T) Bintree<T>::attachAsRC(BinNodePosi(T)x, Bintree<T>* & s)
     _size+= s->_size;
     updateHeightAbove(x);
     s->_root = NULL; s->_size = 0;
-    delete s; 
+    // delete s; 
     // s指向了一棵树, 树内有很多指针和数据
     // 现在s已经不再需要了, 我们会删除s内分配在heap上的数据
     s= NULL;
-    return x
+    return x;
 }
 template <typename T>
 static int  removeAt(BinNodePosi(T) x)
@@ -79,7 +80,10 @@ template <typename T>
 int Bintree<T>::remove(BinNodePosi(T) x)
 {
     if(!x) return 0; // empty tree
-    FromParentTo(*x) = NULL;
+    // BinNodePosi(T) temp = FromParentTo(*x);
+    if (IsLChild(*x)) x->parent->lc = NULL;
+    else if(IsRChild(*x)) x->parent->rc = NULL;
+    // temp = NULL;
     updateHeightAbove(x);
     int n = removeAt(x); _size -=n; return n;
 }
@@ -87,13 +91,15 @@ int Bintree<T>::remove(BinNodePosi(T) x)
 template <typename T>
 Bintree<T>* Bintree<T>::secede(BinNodePosi(T) x)
 {
-    FromParentTo(*x) = NULL;
+    if (IsLChild(*x)) x->parent->lc = NULL;
+    else x->parent->rc = NULL;
+    // std::cout<<FromParentTo(*x)<<std::endl;
     updateHeightAbove(x);
-    Bintree<T> s = new Bintree<T>;
-    s._root = x;
-    s._root->parent = NULL;
+    Bintree<T>* s = new Bintree<T>;
+    s->_root = x;
+    s->_root->parent = NULL;
     // x->parent = NULL;
-    s._size = x->size();
-    _size -= s._size;
+    s->_size = x->size();
+    _size -= s->_size;
     return s;
 }

@@ -2,6 +2,9 @@
 #define _BIN_NODE_
 #define BinNodePosi(T) BinNode<T>*
 #include <iostream>
+#include "../Chapter4_stack&queue/stack.h"
+#include "../Chapter4_stack&queue/queue.h"
+
 // #define stature(p) ((p) ? (p)->height : -1)
 typedef enum{RB_RED, RB_BLACK} RBColor;
 
@@ -37,8 +40,3 @@ struct BinNode{
 
 #include "binnode.cpp"
 #endif
-
-
-
-
-

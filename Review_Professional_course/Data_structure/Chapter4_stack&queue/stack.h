@@ -11,4 +11,5 @@ class Stack: public Vector<T>
         T& top() {return (*this)[Vector<T>::size()-1];}
 };
 
+
 #endif
