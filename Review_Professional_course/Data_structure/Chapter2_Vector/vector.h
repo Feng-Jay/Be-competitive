@@ -31,7 +31,11 @@ class Vector{
 
     public:
         //constructors
-        Vector();
+        // Vector();
+        Vector(int c = DEFAULT_CAPACITY, int s =0, T v=0){
+            _elems= new T [_capacity = c];
+            for(_size = 0;_size<s; _elems[_size++]= v);
+        }
         Vector(T const* A, Rank n); 
         Vector(T const* A, Rank lo, Rank hi);
         Vector(Vector<T> const& V); 

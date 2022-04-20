@@ -1,11 +1,11 @@
 #include "vector.h"
 
-template <typename T> 
-Vector<T>:: Vector():
-_size(0),_capacity(DEFAULT_CAPACITY)
-{
-    _elems = new T [_capacity];
-}
+// template <typename T> 
+// Vector<T>:: Vector():
+// _size(0),_capacity(DEFAULT_CAPACITY)
+// {
+//     _elems = new T [_capacity];
+// }
 // 重载的原因是:
 // 由于vector 内部可能含有动态存储的空间, 简单的赋值不足以支持向量间赋值
 // 因此重载 = 运算符, 支持此类情况
