@@ -193,3 +193,262 @@ void Graph<Tv, Te>:: DFS(int v, int & clock)
 时间复杂度: dfs = O(n); DFS()=O(n+e) (对每条边和节点的耗时均为O(1))
 
 **常用于可达性判断, 连通域分解, DAG图判断, 拓扑排序**
+
+## Topological Sorting
+
+给定描述某一实际应用的有向图, 如何在与该图“相容”的前提下, 将所有点排成一个线性序列.  相容: 每一顶点都不会通过边指向其在此序列中的前驱顶点. —— 这样的线性序列称为原有向图的一个拓扑排序.
+
+**不含环的有向图——有向无环图, 一定存在拓扑排序. 存在拓扑排序的图一定是有向无环图.**
+
+这是因为有向无环图对应**偏序关系**, 而拓扑排序对应**全序关系**, 顶点数目有限时, 与任一偏序相容的全序必然存在. 
+
+算法1:
+
+任一有限偏序集中, 必有极值元素; 任一有向无环图也必然包括入度为0的节点. **只要将入度为0的顶点m(及其边)从图G中取出, 剩余的G' 依然是有向无环图, 其拓扑排序依然存在.**
+
+**因此, 只要得到G'的拓扑排序, 只需要将m作为最大顶点插入, 即可得到G的拓扑排序.**
+
+算法2:
+
+有限偏序集中也存在极小元素, 以该元素为顶点, 出度为0. (DFS中转换至VISITED状态的顶点也有此性质), 且DFS中被标记为VISITED的顶点及关联边对后续的搜索过程将不起任何作用. 因此转换为VISITED状态等价于: 从图中剔除了m(及其关联边)之后的出度为0——在拓扑排序中，该顶点应为顶点m的前驱. 
+
+因此VISITED次序正好是**拓扑排序的逆序**. 且DFS一旦发现后向边(环)即可终止算法.
+
+```cpp
+template <typename Tv, typename Te>
+Stack<Tv>* Graph<Tv, Te>::tSort(int s){
+    reset();
+    int clock =0; int v =s;
+    Stack<Tv>* S = new Stack<Tv>;
+    do{
+        if(status(v) == UNDISCOVERED){
+            if(!Tsort(v, clock, S)){
+                // if find loop, empty the stack.
+                while(!S->empty())
+                    S->pop(); break;
+            }
+        }
+    }while(s!=(v= (++v%n)));
+    return S;
+}
+
+template<typename Tv, typename Te>
+bool Graph<Tv, Te>::Tsort(int v, int& clock, Stack<Tv>* S){
+    dTime(v) = ++clock; status(v) = DISCOVERED;
+    for(int u = firstNbr(v); -1<u; u = nextNbr(v,u)){
+        // get all neighbors
+        switch(status(u)){
+            case UNDISCOVERED:
+                parent(u) = v; type(u,v)=TREE;
+                if(!(Tsort(u,clock, S)))
+                    return false;
+                // if not discovered, deep in it.
+                break;
+            case DISCOVERED:
+                type(u,v) = BACKWARD;
+                return false;
+                // if find loop, return false, there is no dag
+            default: type(u,v) = (dTime(v) < dTime(u)) ? FORWARD : CROSS;
+            // else identify the forward and cross edge.
+            break;
+        }
+    }
+    status(v) = VISITED;
+    S->push(vertex(v));
+    // after tag it as visited, push it to stack.
+    return true;
+}
+```
+
+**相比DFS算法, 引入一个存放VISITED顺序的栈**, 空间小于O(n).
+
+因此空间复杂度仍为 O(n+e), 时间复杂度仍为O(n+e)
+
+## 双连通域分解
+
+对于无向图G, 若删除顶点v后G包含的连通域增多, 则称v为切割节点(关节点). 
+
+不含任何关节点的图称作**双连通图**, 任一无向图都可视作若干个极大的双连通子图组合而成, 每一个子图都是原图的一个双连通域. 
+
+**蛮力算法**
+
+首先: 通过BFS/DFS统计出图G所含连通域数目, 然后逐一枚举每个顶点v, 暂时将其从图中删去. 再次统计连通域数目, 若有增加, 则为关节点. 
+
+时间复杂度: O(n(n+e))
+
+****
+
+**可行算法**
+
+尽管搜索树丢失了很多信息, 但也有能被利用的:
+
+1. DFS树的叶节点绝不可能是关节点. 
+
+2. DFS树的根节点若至少有两个分支, 则必然是一个关节点.
+
+3. 内部节点, 若c的移除导致其一棵子树与其祖先无法连通, 则c必为关节点. 若c的所有真子树都能与c的某一祖先连通, 则c不可能是关节点. 
+
+在无向图的DFS树中, C的真子树只可能通过后向边和C的真祖先连通, 因此只要在DFS搜索过程中记录更新各点的能连通的最高祖先(highest connected ancestor), 即可及时认定关节点. 
+
+```cpp
+template<typename Tv, typename Te>
+void Graph<Tv, Te>::bcc(int s){
+    reset(); int clock =0; int v =s; Stack<int> S; 
+    //stack to record articulation points
+    do{
+        if(status(v)==UNDISCOVERED){
+            BCC(v, clock, S);
+            S.pop(); // pop the connect component's start
+        }
+    }while(s!=(v=(++v)%n));
+}
+
+#define hca(x) (fTime(x)) //闲置的ftime当hca
+template <typename Tv, typename Te>
+void Graph<Tv, Te>::BCC(int v, int& clock, Stack<int>& S)
+{
+    hca(v)=dTime(v)=++clock;
+    status(v) = DISCOVERED; S.push(v);
+    for(int u = firstNbr(v); -1<u; u=nextNbr(v,u)){
+        switch(status(u)){
+            case UNDISCOVERED:
+                parent(u)=v; type(v,u)= TREE; BCC(u,clock,S);
+                if(hca(u)<dTime(v)) //u可指向v的真祖先
+                    hca(v) = std::min(hca(v),hca(u)); //那么v也如此
+                else{ // 否则以v为关节点(u以下即是一个BCC，且其中顶点此时正集中栈S的顶部)
+                    while(v!=S.pop());
+                    //依次弹出当前BCC中的节点，亦可根据实际需求转存至其它结构
+                    S.push(v);//最后一个节点重新入栈, 总计至多两次.
+                }
+                break;
+            case DISCOVERED:
+                type(v,u) = BACKWARD;
+                if(u!=parent(v)) hca(v) = std::min(hca(v), dTime(u));
+                // 更新hca(v)
+                break;
+            default:
+                type(v,u) = (dTime(v)<dTime(u)) ? FORWARD : CROSS;
+                break;
+        }
+    }
+    status(v) =VISITED;
+}
+#undef hca
+```
+故若hca[ u ] > dTime[ v ]，则说明u及其后代无法通过后向边与v的真祖先连通，故v为关节点。既然栈S存有搜索过的顶点，与该关节点相对应的双连 通域内的顶点，此时都应集中存放于S顶部，故可依次弹出这些顶点。v本身必然最后弹出，作为 多个连通域的联接枢纽，它应重新进栈。
+
+反之若hca[ u ] < dTime[ v ]，则意味着u可经由后向边连通至v的真祖先。果真如此，则这一性质对v同样适用，故有必要将hca[ v ]，更新为hca[ v ]与hca[ u ]之间的更小者。
+
+当然，每遇到一条后向边(v, u)，也需要及时地将hca[ v ]，更新为hca[ v ]与dTime[ u ]之间的更小者，以保证hca[ v ]能够始终记录顶点v可经由后向边向上连通的最高祖先。
+
+只增加了一个规模为O(n)的辅助栈, 空间复杂度O(n+e), 时间复杂度O(n+e)
+
+## 优先级搜索
+
+以上的搜索算法虽然各有不同, 但基本框架都有所相似.(通过迭代逐一发现各节点, 纳入遍历树并进行处理), 之间的差异主要体现在每一步迭代中对新顶点的选取策略不同(BFS选更早发现的节点, DFS选最后发现的节点).
+
+即给顶点赋予的优先级不同, 但都是选择优先级最高的节点. 故这里不妨约定优先级数越大(小)顶点的优先级越低(高)。相应地，在算法的初始化阶段(如代码6.1中的reset())， 通常都将顶点的优先级数统一置为最大(比如对于int类型，可采用INT_MAX) 即优先级最低。
+
+```cpp
+template <typename Tv, typename Te>
+template <typename PU>
+void Graph<Tv, Te>::pfs(int s, PU prioUpdater){
+    reset();
+    int v =s;
+    do {
+        if(status(v)== UNDISCOVERED)
+            PFS(v, prioUpdater);
+    }while(s!=(v=(++v%n)));
+}
+
+template <typename Tv, typename Te>
+template <typename PU>
+void Graph<Tv, Te>::PFS(int s, PU prioUpdater){
+    priority(s) =0; status(s) = VISITED; // point add into PFS-tree
+    parent(s) = -1;
+    while(1){
+        for(int w= firstNbr(s); -1<w; w= nextNbr(s,w))
+            prioUpdater(this, s, w); // update w's priority and its parent
+        for(int shortest= INT_MIN, w =0; w<n; ++w){
+            if(UNDISCOVERED == status(w)){
+                if(shortest > priority(w)){
+                    shortest = priority(w);
+                    s = w; // get the biggest priority point
+                }
+            }
+        }
+        if(status(s) == VISITED) break; 
+        // if the best points are all added, end.
+        status(s) = VISITED; type(parent(s), s)= TREE;
+        // else turn it into visited, add to the tree.
+    }
+}
+```
+
+时间复杂度 O(n^2)
+
+## 最小支撑树
+
+连通图G的某一无环连通子图T覆盖G中的所有节点, 则称为G的一棵支撑树/生成树
+
+**支撑树既是"禁止环路"前提下的极大子图, 也是"保持连通"前提下的最小子图**. 尽管一幅图可能有多棵支撑树, 但都是由n个节点, n-1条边构成的.
+
+**蛮力算法: 逐一考察图的所有支撑树, 得到最低值.** 根据`cayley`公式可知由n个互异点组成的完全图共有n^(n-2)棵支撑树.代价无法接受
+
+****
+
+**Prime 算法**
+
+思路: 最小支撑树总是会采用联接每一割的最短跨越边. 使用**贪心策略**,每一步迭代之前，假设已经得到最小支 撑树T的一棵子树Tk = (Vk; Ek)，其中Vk包含k个顶点，Ek包含k - 1条边。于是，若将Vk及其补 集视作原图的一个割，则在找到该割的最短跨越边ek = (vk, uk)( $v_k \in V_k$ 且 $ u_k \not \in V_k$)之后，即可 将Tk扩展为一棵更大的子树 $ Tk+1 = (V_{k+1}; E_{k+1})$ ，其中$V_{k+1} = V_k \cup {u_k}，E_{k+1} = E_k \cup {e_k}$。 最初的T1不含边而仅含单个顶点，故可从原图的顶点中任意选取.
+
+可借助优先级搜索的算法实现, 每次由$T_k$扩充到$T_{k+1}$时, 可将$V_k$外的每个顶点u到$V_k$的距离视作u的优先级. 如此, 拥有最短跨越边的$u_k$就会被选中.
+
+```cpp
+template <typename Tv, typename Te> struct PrimePU
+{
+    virtual void operator() (Graph<Tv, Te>* g, int v, int uk){
+        if(UNDISCOVERED == g->status(uk)){
+            if(g->priority(uk) > g->weight(v, uk)){
+                g->priority(uk) = g->weight(v, uk);
+                g->parent(uk) = v;
+            }
+        }
+    }
+};
+```
+
+上述的更新器只需要O(1)时间, 所以prime算法的时间复杂度为O(n+e)
+
+## 最短路径
+
+给定带权网络G =(V,E), 以及源点 $s \in V$, 对于其他节点v, s到v的最短通路有多长, 由哪些边构成?
+
+策略: 若顶点s到v的最短路径为p, 于是对于该路径上的任一顶点u, 若其在p上对应的前缀为o, 则o也是从s到u的最短路径(之一)
+
+因为路径肯定无环, 所以最短路径应该是一棵**最短路径树**.
+
+**Dijkstra算法**
+
+将顶点$u_i$到起点s的距离记作: $d_i = dist(s, u_i), 1 \leq i \leq n$. 不妨设$d_i$按非降序排列. 即$di \leq dj$当且仅当$i \leq j$。于是与s自身相对应地必有:u1 = s。
+
+最短路径树$T_1$仅含单个节点s, $T_n=T$. 实际上 $T_k$一定是一棵树, 为验证这一点，只需归纳证明 Tk是连通的。为从Tk+1转到Tk而删除的顶点uk+1，在Tk+1中必是叶节点。而根据最短路径的单调性， 作为Tk+1中距离最远的顶点，uk+1不可能拥有后代。
+
+因此算法的**贪心策略为**:只要能找到$u_{k+1}$, 即可对当前最短路径树进行扩充. 每一个顶点uk+1都是在Tk之外，距离s最近者将此距离作为各顶点的优先级数，则与最小支撑树的Prim算法类似，每次将uk+1加入Tk并将其 拓展至Tk+1后，需要且只需要更新那些仍在Tk+1之外，且与Tk+1关联的顶点的优先级数。
+
+可见，该算法与Prim算法仅有一处差异:考虑的是uk+1到s的距离，而不再是其到Tk的距离.
+
+```cpp
+template <typename Tv, typename Te>
+struct DijkstraPU{
+    virtual void operator() (Graph<Tv, Te>* g, int uk, int v){
+        if(g->status(uk) == UNDISCOVERED){
+            if(g->priority(uk) > g->priority(v)+g->weight(v, uk)){
+                g->priority(uk) = g->priority(v)+g->weight(v, uk);
+                g->parent(uk) = v;
+            }
+        }
+    }
+};
+```
+同样, 迭代器只需要常数时间, 因此Dijkstra算法的时间复杂度为O(n^2).
+
