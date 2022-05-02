@@ -22,17 +22,21 @@
 
 **This week's schedule**
 
-> 7:30~9:00  Memorize English
+> 7:30~9:00  背单词, 不流于形式
 
-> 9:00~11:30 Implement data structure books.
+> 9:00~11:30 刷leetcode, 本周刷完数组
 
-> 13:30~17:00 NSCSCC or Paper or class, maybe dues if necessary. 
+> 13:30~17:00 复习数据结构, 学习NSCSCC知识
 
-> 18:00~20:00 Dues and class design 
+> 17:30~18:30 读读书, 娱乐娱乐
 
-> 20:00~21:00 Running
+> 19:00~20:00 去跑跑步
 
-> 21:30~23:30 time to coding(oj or dues) and talking or relaxing. 
+> 20:00~22:30 回图书馆继续卷!
+
+> 22:30~23:30/23:59 和孙晓楠谈天说地
+
+总结: 上午刷leetcode, 下午复习和写写代码, 然后就读书跑步休息一下, 晚上回去继续看看专业课. 
 
 ## Thanks
 
