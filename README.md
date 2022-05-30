@@ -38,6 +38,42 @@
 
 总结: 上午刷leetcode, 下午复习和写写代码, 然后就读书跑步休息一下, 晚上回去继续看看专业课. 
 
+## 夏令营填报
+
+### 北京大学
+
+- [ ] [北京大学软件与微电子学院2022年全国优秀大学生夏令营通知](http://www.ss.pku.edu.cn/index.php/admission/admnotice/4334-2022年北京大学软件与微电子学院优秀大学生夏令营通知)
+
+- [ ] [北京大学计算机学院关于举办2022年优秀大学生夏令营的通知](https://cs.pku.edu.cn/info/1023/3442.htm)
+
+需要两封推荐信
+
+软微寄材料
+
+### 清华大学
+
+- [ ]  [清华大学第五届（2022年）“计算法学”夏令营](https://www.law.tsinghua.edu.cn/info/1135/13185.htm)
+
+寄送材料
+
+### 中科大
+
+- [x] [中国科学技术大学“优秀大学生夏令营” 活动通知](https://mp.weixin.qq.com/s?__biz=MzA5OTQ4MzAzMg==&mid=2650083353&idx=1&sn=1db1bed8ee834f726a53e97acd64ce4c)
+
+### 南京大学
+
+- [ ] [南京大学计算机科学与技术系2022年本科生开放日报名通知](https://cs.nju.edu.cn/b0/eb/c1654a569579/page.htm)
+
+个人自述
+
+### FDU
+
+- [x] [复旦大学计算机科学技术学院2022年全国优秀大学生夏令营](https://cs.fudan.edu.cn/bf/99/c24257a442265/page.htm)
+
+### SJTU
+
+- [ ] [上海交通大学“2022软件学院优才夏令营”的通知](http://www.se.sjtu.edu.cn/notice/noticedetail.aspx?id=21216)
+
 ## Thanks
 
 感谢[CS自学指南](https://github.com/PKUFlyingPig/cs-self-learning)对于信息的整合。你也可以和我一起在[这里](https://csdiy.wiki/)找到自己心仪的课程。
