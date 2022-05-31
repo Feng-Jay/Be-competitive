@@ -10,11 +10,13 @@
 
 - [ ] [Data Structure](https://github.com/yingxiangyu/data_structure)
 
-- [ ] [CS 110L: Safety in Systems Programming](https://reberhardt.com/cs110l/spring-2020/)
+- [x] [CS 110L: Safety in Systems Programming](https://reberhardt.com/cs110l/spring-2020/)
 
 - [x] [CMU 15-213: CSAPP](http://csapp.cs.cmu.edu/)
 
-- [ ] [Computer Architecture AQA](https://www.ituring.com.cn/book/2632) 
+- [x] [Operating System](https://www.bilibili.com/video/BV1Cm4y1d7Ur?spm_id_from=333.999.0.0)
+
+<!-- - [ ] [Computer Architecture AQA](https://www.ituring.com.cn/book/2632)  -->
 
 
 
