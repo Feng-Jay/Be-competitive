@@ -14,7 +14,7 @@
 
 - [x] [CMU 15-213: CSAPP](http://csapp.cs.cmu.edu/)
 
-- [x] [Operating System](https://www.bilibili.com/video/BV1Cm4y1d7Ur?spm_id_from=333.999.0.0)
+- [ ] [Operating System](https://www.bilibili.com/video/BV1Cm4y1d7Ur?spm_id_from=333.999.0.0)
 
 <!-- - [ ] [Computer Architecture AQA](https://www.ituring.com.cn/book/2632)  -->
 
