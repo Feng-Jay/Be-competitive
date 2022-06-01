@@ -8,7 +8,7 @@
 
 - [x] [CS 106L: Standard C++ Programming](http://web.stanford.edu/class/cs106l/)
 
-- [ ] [Data Structure](https://github.com/yingxiangyu/data_structure)
+- [x] [Data Structure](https://github.com/yingxiangyu/data_structure)
 
 - [x] [CS 110L: Safety in Systems Programming](https://reberhardt.com/cs110l/spring-2020/)
 
