@@ -2,7 +2,29 @@
 
 > CS不仅靠天赋，更靠兴趣与努力！
 
+## My summer plan
+
+1. PA learning
+
+2. OS Summercamp 
+
+3. Machine/Deep Learning 
+
+4. Might learn JAVA? Do some C++ projects
+
+5. Get the Graduation Project's topic slecetion
+
+
 ## 目前正在学习的课程
+
+- [ ] [Operating System](https://www.bilibili.com/video/BV1Cm4y1d7Ur?spm_id_from=333.999.0.0)
+
+- [ ] [CS 110L: Safety in Systems Programming](https://reberhardt.com/cs110l/spring-2020/)
+
+- [ ] []
+
+<!-- - [ ] [Computer Architecture AQA](https://www.ituring.com.cn/book/2632)  -->
+## 完成课程
 
 - [x] [MIT-Missing-Semester](https://missing.csail.mit.edu/)
 
@@ -10,37 +32,11 @@
 
 - [x] [Data Structure](https://github.com/yingxiangyu/data_structure)
 
-- [x] [CS 110L: Safety in Systems Programming](https://reberhardt.com/cs110l/spring-2020/)
-
 - [x] [CMU 15-213: CSAPP](http://csapp.cs.cmu.edu/)
-
-- [ ] [Operating System](https://www.bilibili.com/video/BV1Cm4y1d7Ur?spm_id_from=333.999.0.0)
-
-<!-- - [ ] [Computer Architecture AQA](https://www.ituring.com.cn/book/2632)  -->
-
-
-
-## Last several weeks
-
-> 6:00 ~ 7:00 晨跑 + 吃早饭
-
-> 8:30 ~ 11:30 复习OS
-
-> 13:30~17:00 复习体系结构 + 一些面试准备
-
-> 17:30~18:30 读读书, 娱乐娱乐
-
-> 19:00~21:00 继续复习，完成每日两章的任务
-
-> 21:00~22:00 健身环+休息
-
-> 22:00~23:00 复盘
 
 ## 夏令营填报
 
-总算不是夏零营了55555
-
-已入营：NJU, PKU, TJU(联系导师)
+RNM, 保本校了! 今年不仅学生海，学校更海，直接摆了。
 
 ### 北京大学
 
@@ -78,7 +74,7 @@
 
 ### SJTU
 
-- [ ] [上海交通大学“2022软件学院优才夏令营”的通知](http://www.se.sjtu.edu.cn/notice/noticedetail.aspx?id=21216)
+- [x] [上海交通大学“2022软件学院优才夏令营”的通知](http://www.se.sjtu.edu.cn/notice/noticedetail.aspx?id=21216)
 
 ## Thanks
 
