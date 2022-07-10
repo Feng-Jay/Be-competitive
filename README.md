@@ -14,14 +14,25 @@
 
 5. Get the Graduation Project's topic slecetion
 
-
 ## 目前正在学习的课程
 
 - [ ] [Operating System](https://www.bilibili.com/video/BV1Cm4y1d7Ur?spm_id_from=333.999.0.0)
 
 - [ ] [CS 110L: Safety in Systems Programming](https://reberhardt.com/cs110l/spring-2020/)
 
-- [ ] []
+*****
+
+计划开始的课程:
+
+- [ ] [OS summercamp](https://learningos.github.io/rust-based-os-comp2022/)
+
+- [ ] [Program Analysis](https://www.bilibili.com/video/av91858985)
+
+- [ ] [JAVA](https://sp18.datastructur.es/)
+
+- [ ] [Machine Learning](https://www.coursera.org/learn/machine-learning)
+
+- [ ] [Deep Learning](https://www.coursera.org/specializations/deep-learning)
 
 <!-- - [ ] [Computer Architecture AQA](https://www.ituring.com.cn/book/2632)  -->
 ## 完成课程
