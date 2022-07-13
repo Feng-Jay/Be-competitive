@@ -24,6 +24,8 @@
 
 计划开始的课程:
 
+- [ ] [Reading CPPPP]
+
 - [ ] [OS summercamp](https://learningos.github.io/rust-based-os-comp2022/)
 
 - [ ] [Program Analysis](https://www.bilibili.com/video/av91858985)
