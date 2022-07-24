@@ -51,6 +51,8 @@
 
 RNM, 保本校了! 今年不仅学生海，学校更海，直接摆了。
 
+加更一篇自己的![保研经验贴](https://www.zhihu.com/question/486545254/answer/2590333708)
+
 ### 北京大学
 
 - [x] [北京大学软件与微电子学院2022年全国优秀大学生夏令营通知](http://www.ss.pku.edu.cn/index.php/admission/admnotice/4334-2022年北京大学软件与微电子学院优秀大学生夏令营通知)
