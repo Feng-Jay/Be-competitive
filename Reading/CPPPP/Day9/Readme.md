@@ -167,3 +167,62 @@ cout <<(float1 + float2 = net).megval()<<endl;
 
 ## 指向对象的指针
 
+可以用`new`创建一个新的对象, `String* favorite = new String(ss);`, 将调用类的构造函数
+
+**定位new运算符可能带来的问题**:
+1. 在同一内存位置new对象时, 后一个对象将覆盖新的对象, 如果类中会为对象动态分配内存则会引发很大的问题
+
+2. 其次, 将delete[] 用于buffer时, 不会使用定位new运算符创建的对象的析构函数.
+
+3. 对于使用定位new运算符的单元, 我们不能使用delete直接删除, 因为buffer是由 new [] 初始化的, 所以必须使用delete [] 删除, 即使使用new初始化, delete也对buffer内部的数据一无所知. 必须显式调用析构函数. `pc->~JustTesting()`
+
+## Reviewing
+
+1. 重载 << 运算符
+
+重新定义<<运算符, 以便将其与cout一起使用显示对象内容.
+
+```cpp
+ostream & operator<<(ostream& os, const c_name & obj)
+{
+  os<<...;
+  return os;
+}
+```
+
+2. 转换函数
+
+将单个值转换为类类型, 需要创建原型如下的类构造函数:
+
+```cpp
+c_name(type_name value);
+```
+
+要将类转换为其他类型, 需要创建原型如下的类成员函数:
+
+```cpp
+operator type_name();
+```
+
+3. 构造函数使用new的类
+
+应采取如下的预防措施:
+
+> 1. 指向的内存是由new分配的所有类成员, 都应在类的析构函数中对其使用delete  
+> 2. 如果析构函数对指针类成员使用delete释放内存, 则每个构造函数都应使用new来初始化, 或设置为空指针  
+> 3. 构造函数中要么使用new, 要么使用new[], 不能混用, 因为析构函数只有一个  
+> 4. 应定义一个分配内存的复制构造函数, 这样程序可以将类对象初始化为另一个类对象,`className(const className&)`  
+> 5. 应定义一个重载运算符的类成员函数, 如下:
+
+```cpp 
+c_name & c_name::operator=(const c_name& cn){
+  if(this == & cn)
+    return *this;
+  delete [] c_pointer;
+  // set the size number of type_name units to be copied.
+  c_pointer = new type_name[size];
+  //then copy data pointed to by cn.c_pointer to location pointed to by c_pointer. 
+  ...
+  return *this;
+}
+```
