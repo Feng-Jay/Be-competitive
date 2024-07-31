@@ -1,27 +1,19 @@
 # FFengJay的计算机自学指南
-# FFengJay's computer science diy guide.
 
-## Learning Online Lessons 
+<p align="center">
+<a href="https://img.shields.io/badge/PRs-welcome-blue"><img alt="Static Badge" src="https://img.shields.io/badge/PRs-welcome-blue"></a>
+<a href="https://github.com/Feng-Jay/Be-competitive/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/Feng-Jay/Be-competitive"> </a>
+</p>
 
-- [ ] [Reading CPPPP]
+## Learning Classes/Books
 
 - [ ] [Program Analysis](https://www.bilibili.com/video/av91858985)
+- [ ] [LeetCode101](https://github.com/changgyhub/leetcode_101/)
 
 ## Plan to learn
 
 - [ ] [JAVA](https://sp18.datastructur.es/)
 
-- [ ] [Machine Learning](https://www.coursera.org/learn/machine-learning)
-
-- [ ] [Deep Learning](https://www.coursera.org/specializations/deep-learning)
-
-- [ ] [Operating System](https://www.bilibili.com/video/BV1Cm4y1d7Ur?spm_id_from=333.999.0.0)
-
-- [ ] [CS 110L: Safety in Systems Programming](https://reberhardt.com/cs110l/spring-2020/)
-
-- [ ] [OS summercamp](https://learningos.github.io/rust-based-os-comp2022/)
-
-<!-- - [ ] [Computer Architecture AQA](https://www.ituring.com.cn/book/2632)  -->
 ## Completed Lessons
 
 - [x] [MIT-Missing-Semester](https://missing.csail.mit.edu/)
@@ -32,11 +24,7 @@
 
 - [x] [CMU 15-213: CSAPP](http://csapp.cs.cmu.edu/)
 
-## 夏令营填报
-
-详细内容可以看 [保研经验贴](https://www.zhihu.com/question/486545254/answer/2590333708)
 
 ## Thanks
 
-感谢[CS自学指南](https://github.com/PKUFlyingPig/cs-self-learning)对于信息的整合。你也可以和我一起在[这里](https://csdiy.wiki/)找到自己心仪的课程。
-
+Thanks to [CSDIY](https://github.com/PKUFlyingPig/cs-self-learning)
