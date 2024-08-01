@@ -66,3 +66,68 @@ public:
 条件1被破坏 <==> 条件1首先成立, 第二次遍历后不成立 <==> ratings[i] > ratings[i-1], candies[i] <= candies[i-1]
 
 由于candies数组只会增加不会减少，那么是candies[i-1]增大，但已经有ratings[i-1] < ratings[i], 所以在第二次遍历时不会将candies[i-1]提升，因此此时两个条件都满足。
+
+
+## [435.无重叠区间](https://leetcode.cn/problems/non-overlapping-intervals/description/)
+
+```C++
+class Solution {
+public:
+    static bool compare(vector<int> a, vector<int> b){
+        // enda < endb
+        // if (a[1] != b[1]){
+           return a[1] < b[1]; 
+        // }
+    }
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        int len = intervals.size();
+        sort(intervals.begin(), intervals.end(), [](const auto&a, const auto&b){
+            return a[1] < b[1]; 
+        });
+        int end = intervals[0][1];
+        int res = 0;
+        for(int i = 1; i < len; ++i){
+            if(end > intervals[i][0]){
+                res += 1;
+            }else{
+                end = intervals[i][1];
+            }
+        }
+        return res;
+    }
+};
+```
+
+## [605.种花问题](https://leetcode.cn/problems/can-place-flowers/description/)
+
+```C++
+class Solution {
+public:
+    bool canPlaceFlowers(vector<int>& flowerbed, int n) {
+        //总共可以分为三种类型的花坛
+        //左边界到花: 如果有n个空格，可以种n/2朵花
+        //花到右边界: 如果有n个空格，可以种n/2 朵花 
+        //在两个花之间: 如果有n个空格，可以种n/2朵花
+        int len = flowerbed.size();
+        int prev = -1;
+        int res = 0;
+        for (int i = 0; i < len; ++i){
+            if (flowerbed[i] == 1){
+                if(prev < 0){
+                    res += i/2;
+                }else{
+                    res += (i - prev - 2) / 2;
+                }
+                prev = i;
+            }
+        }
+        //特殊情况，全空
+        if (prev < 0){
+            res += (len + 1)/ 2;
+        }else{
+            res += (len - prev - 1) / 2;
+        }
+        return res >= n;
+    }
+};
+```
