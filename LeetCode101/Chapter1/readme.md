@@ -145,3 +145,76 @@ public:
 3. [花, 右临界]，那么可以用来种花的空格有 n - 1个，可以种 (n - 1 + 1)/2 朵花
 
 特殊情况，如果花坛没有花，那么所有len个空格都可以用来种花，可以种 (len + 1)/2 朵花
+
+
+## [452. 用最少数量的箭引爆气球](https://leetcode.cn/problems/minimum-number-of-arrows-to-burst-balloons/description/)
+
+```C++
+class Solution {
+public:
+    int findMinArrowShots(vector<vector<int>>& points) {
+        int len = points.size();
+        if (len == 1) return 1;
+        sort(points.begin(), points.end(), [](const vector<int>&a, const vector<int>&b){
+            return a[1] < b[1];
+        });
+        int right = points[0][1];
+        int res = 1;
+        for(int i = 1; i < len; ++i){
+            if (points[i][0] <= right){
+                continue;
+            }else{
+                res += 1;
+                right = points[i][1];
+            }
+        }
+        return res;
+    }
+};
+```
+
+## [763. 划分字母区间](https://leetcode.cn/problems/partition-labels/description/)
+
+```C++
+class Solution {
+public:
+    vector<int> partitionLabels(string s) {
+        int endIndexes[26];
+        int len = s.size();
+        for(int i = 0; i < len; ++i){
+            endIndexes[s[i] - 'a'] = i;
+        }
+        int start = 0;
+        int end = 0;
+        vector<int> res;
+        for(int i = 0; i < len; ++i){
+            end = max(end, endIndexes[s[i] - 'a']);
+            if (i == end){
+                res.push_back(end - start + 1);
+                start = end + 1;
+            }
+        }
+        return res;
+    }
+};
+```
+
+
+## [122. 买卖股票的最佳时机 II](https://leetcode.cn/problems/best-time-to-buy-and-sell-stock-ii/description/)
+
+```C++
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int len = prices.size();
+        if (len == 1) return 0;
+        int res = 0;
+        for (int i = 0; i < len - 1; ++i){
+            if(prices[i] < prices[i + 1]){
+               res += prices[i + 1] - prices[i]; 
+            }
+        }
+        return res;
+    }
+};
+```
