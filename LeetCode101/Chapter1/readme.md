@@ -228,3 +228,126 @@ public:
 ```
 
 由于可以当天买卖，且每天都可以进行买卖，那么贪心策略就是：只要明天价格比今天高，那就今天买入，明天卖出。等到明天后依旧执行该策略，如果下一天价格更高，那就今天卖出后再买入，下一天卖掉，以此类推。
+
+
+## [406.根据身高重建队列](https://leetcode.cn/problems/queue-reconstruction-by-height/description/)
+
+这道题有两种思路，分别是从低到高和从高到低考虑排序:
+
+1. 由低到高
+
+根据题意我们可以知道，当身高相同时，ki值更高的人会排在ki较低的人的后面，因此可以视作ki更高的人身高其实略低一个delta。这步在实现的时候有一个trick，即可以将hi作为第一个key升序排序，ki作为第二个key降序排序。
+
+接下来就是缩小问题的求解空间：对排完序的数组，第一个没有被排序的人永远是所有人中身高最低的(相同身高考虑delta)，那么这个人的位置一定是固定的，即他前面有ki个空位用于比他更高的人(也就是剩下人中的ki个，因为都比他高)，位置是第ki+1个空位。当最低的人位置确定后，问题空间即可缩小，剩下的n-1个人中仍有一个最低的人，重复上述过程直到所有人都有位置。
+
+```C++
+class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        int len = people.size();
+        if (len == 1) return people;
+        sort(people.begin(), people.end(), [](const vector<int>& a, const vector<int>& b){
+            return a[0] == b[0] ? a[1] > b[1] : a[0] < b[0];
+        });
+        vector<vector<int>> res(len);
+        for(int i = 0; i < len; ++i){
+            int spaces = people[i][1] + 1;
+            for(int j = 0; j < len; ++j){
+                if(res[j].empty()){
+                    spaces--;
+                    if(spaces == 0){
+                        res[j] = people[i];
+                        break;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+};
+```
+
+2. 由高到低
+
+我们仍然可以采用第一种思路的假设：当hi相同时，ki越大可以视为身高越低。不过此时我们需要对hi进行逆序排序，hi进行顺序排序来保证身高更"高"的人排在数组前面。当身高最高的人站好后，后面来的人身高一定比他低，如果这个人的ki > 0，那么在数组的第ki位置插入这个人即可(此时排序一定会让hi更高，ki更低的人往前排，所以该插入一定是合法的, 即数组中至少已经有了ki个人); 如果ki==0，将其插在数组刚开始即可。对数组中每个人都采用上述策略，即可恢复序列。
+
+
+```C++
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        // 其实个身高组里面是有序的，组间顺序需要恢复
+        int len = people.size();
+        if (len == 1) return people;
+        sort(people.begin(), people.end(), [](const vector<int> & a, const vector<int> & b){
+            return a[0] == b[0] ? a[1] < b[1] : a[0] > b[0];
+        });
+        // for(int i =0; i < len; ++i) cout<<people[i][0] << " " << people[i][1];
+        vector<vector<int>> res;
+        res.push_back(people[0]);
+        for(int i = 1; i < len; ++i){
+            int len2 = res.size();
+            int counter = 0;
+            int j = 0;
+            for(; j < len2; ++j){
+                if(res[j][0] >= people[i][0]){
+                    counter ++;
+                }
+                if(counter > people[i][1]){
+                    res.insert(res.begin() + j, people[i]);
+                    break;
+                }
+                if(counter == people[i][1]){
+                    res.insert(res.begin() + j + 1, people[i]);
+                    break;
+                }
+            }
+            if (j == len2){
+                res.push_back(people[i]);
+            }
+            
+        }
+        return res;
+    }
+```
+我的这版实现其实不太优雅，可以看到后面3个if判断是没有什么必要的
+
+```C++
+if(counter > people[i][1]){
+    // 这个if单独处理 people[i][1] == 0的情况，因此 j == 0
+    res.insert(res.begin() + j, people[i]);
+    break;
+}
+if(counter == people[i][1]){
+    // 这个insert其实可以简化为 res.insert(res.begin() + people[i][1] + 1, people[i]), +1是因为我手动将第一个人加进去了。
+    res.insert(res.begin() + j + 1, people[i]);
+    break;
+}
+if (j == len2){
+    // 如果ki还没达到，那就插入最后，其实没必要，因为在之前的分析中可得到插入的位置是一定存在的，也可以用insert表示: res.insert(res.begin() + j, people[i]);
+    res.push_back(people[i]);
+}
+```
+
+看了官方题解的答案是这样:
+
+```C++
+class Solution {
+public:
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        int len = people.size();
+        if (len == 1) return people;
+        sort(people.begin(), people.end(), [](const vector<int> & a, const vector<int> & b){
+            return a[0] == b[0] ? a[1] < b[1] : a[0] > b[0];
+        });
+        vector<vector<int>> res;
+        //官方题解
+        for (const vector<int> & person: people){
+            res.insert(res.begin() + person[1], person);
+        }
+        return res;
+    }
+}
+```
+
+比我的优雅多了..., 记住一个用法 `vector:insert(vec.begin()+i,a), 在第i+1个元素前插入a`
+
+Okay! 第一章的贪心算法就到这里了，其实总结一下核心思想就是，通过选择数据中最具代表性的一个数据一步步减小问题空间，进而解决问题，有点dp的意思。
