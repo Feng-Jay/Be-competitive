@@ -104,3 +104,121 @@ public:
 ```
 
 整体框架和归并排序还是一样的，不同点在于是从大的数值开始排序，这样nums1中的数字如果需要排在数组尾部的话虽然占用了一个空间，但又将原本占据的那个空间释放出来了，所以该空间一定是够nums1和nums2使用的。
+
+
+## [142. 环形链表 II](https://leetcode.cn/problems/linked-list-cycle-ii/description/)
+
+这道题很直观的解法就是一直遍历该链表，并记录下来每次遍历的节点，第一个重复的节点就是环的开头:
+
+```C++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        unordered_set<ListNode*> res;
+        while(head != nullptr){
+            if(res.count(head)){
+                return head;
+            }
+            res.insert(head);
+            head = head->next;
+        }
+        return nullptr;
+    }
+};
+```
+
+但看题解还有另一种快慢指针的方法，该方法用了叫做Floyd判环法的算法，[link](https://blog.csdn.net/weixin_45609535/article/details/125708493)有详细的解释:
+
+总结一下就是，slow指针每次走一步，fast每次走两步。设环外长度为a, 环长为L。
+
+如果有环，那么slow和fast一定会相遇: 设此时相遇时已经在环的b长度处，还有L-b = c长度就又到环的起点。且当这次相遇时，slow一定不会在环中走过一圈: 假设最差情况，slow刚到环起点，fast到环起点下一个点，此问题就变成了fast追slow，最多花费L-1时间就可以追到, 可得所需要追到的距离为 L - b。所以当相遇时有下列等式: 
+
+```text
+DisSlow = a + (L - b)
+DisFast = a + L * N + (L - b)
+DisFast = 2 * DistSlow
+```
+
+可以得到: (L - b) + a= L * N; 且由前述可得此时交点位于 L - b, 所以再走a步就可以走完这圈，因此将一个指针放在head走，一个放在环中走，相遇时的点即为环起点。
+
+```C++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode* slow = head;
+        ListNode* fast = head;
+        do{
+            if(fast == nullptr || fast->next == nullptr) return nullptr;
+            fast = fast->next->next;
+            slow = slow->next;
+        } while(fast != slow);
+        fast = head;
+        while(fast != slow){
+            fast = fast->next;
+            slow = slow->next;
+        }
+        return slow;
+    }
+};
+```
+
+## [76. 最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring/description/)
+
+```C++
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        map<char, int> token_amount;
+        set<char> token_in;
+        for(int i = 0; i < t.size(); ++i){
+            if (token_amount.contains(t[i])){
+                token_amount[t[i]] += 1;
+            }else{
+                token_amount[t[i]] = 1;
+            }
+            token_in.insert(t[i]);
+        }
+
+        int l =0, r;
+        int counter = 0;
+        int min_size = s.size() + 1;
+        int min_l = 0;
+        for(r = 0; r < s.size(); ++r){
+            if(token_in.contains(s[r])){
+                if(--token_amount[s[r]] >= 0){
+                    counter += 1;
+                }
+                while(counter == t.size()){
+                    if (r - l + 1 < min_size){
+                        min_l = l;
+                        min_size = r - l + 1;
+                    }
+                    if (token_in.contains(s[l]) && ++token_amount[s[l]] > 0){
+                        counter--;
+                    }
+                    l++;
+                }
+            }
+        }
+        return min_size > s.size() ? "" : s.substr(min_l, min_size);
+    }
+};
+```
+
+这道题要用滑动窗口写，其实写的思路很明确，一个指针一直向前移动直到满足要求，然后左指针开始尝试减小长度。就是实现的部分需要花点心思。
