@@ -222,3 +222,61 @@ public:
 ```
 
 这道题要用滑动窗口写，其实写的思路很明确，一个指针一直向前移动直到满足要求，然后左指针开始尝试减小长度。就是实现的部分需要花点心思。
+
+
+## [633. 平方数之和](https://leetcode.cn/problems/sum-of-square-numbers/description/)
+
+```C++
+class Solution {
+public:
+    bool judgeSquareSum(int c) {
+        int upper_bound = sqrt(c) + 1;
+        long long l = 0, r = upper_bound;
+        while(l <= r){
+            long long tmp = l * l + r * r;
+            if (tmp == c){
+                return true;
+            }else if(tmp < c){
+                l += 1;
+            }else if(tmp > c){
+                r -=1;
+            }
+        }
+        return false;
+    }
+};
+```
+
+这道题的思路很简单，就是需要用sqrt算一个上界出来，中间需要注意溢出问题，记得使用long/long long. 然后就是双指针搜索，算平方和根据与c的大小关系遍历。
+
+## [680. 验证回文串 II](https://leetcode.cn/problems/valid-palindrome-ii/description/)
+
+感觉这道题比上一题还要麻烦点，即删除掉一个字符后，只有剩下的字符串是回文的时候才能满足题意。此时删字符的方式有两种，左边和右边，当时在想怎么判断该删哪个，但其实可以都算出来，只要有一个满足回文即可：
+
+```C++
+class Solution {
+public:
+    bool isPalindrome(string s, int l, int r){
+        while(l < r){
+            if (s[l] != s[r]) return false;
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+    bool validPalindrome(string s) {
+        int len = s.size();
+        int i = 0, j = len - 1;
+        int counter = 0;
+        while(i < j){
+            if(s[i] != s[j]){
+                return isPalindrome(s, i + 1, j) || isPalindrome(s, i, j - 1);
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+};
+```
