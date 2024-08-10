@@ -280,3 +280,75 @@ public:
     }
 };
 ```
+
+## [524. 通过删除字母匹配到字典里最长单词](https://leetcode.cn/problems/longest-word-in-dictionary-through-deleting/description/)
+
+```C++
+class Solution {
+public:
+    string findLongestWord(string s, vector<string>& dictionary) {
+        sort(dictionary.begin(), dictionary.end(), [](string a, string b){
+            return a.size() == b.size() ? a < b : a.size() > b.size();
+        });
+        // for(auto s: dictionary) cout << s <<"#";
+        int len_s = s.size();
+        string res = "";
+        for(auto elem: dictionary){
+            int elem_ptr = 0;
+            int s_ptr = 0;
+            int len = elem.size();
+            while(elem_ptr < len && s_ptr < len_s){
+                if(s[s_ptr] == elem[elem_ptr]) elem_ptr++;
+                s_ptr++;
+            }
+            if(elem_ptr == len){
+                res = elem;
+                return res;
+            }
+        }
+        return res;
+    }
+};
+```
+
+这道题的思路其实很简单，就是一个指针指向dictionary的元素，另一个指向字符串s，对dict每个元素进行判断即可。但有点trick的点就是题目中提到的要求长度最长，且字典序最小。这点可以借助排序，以长度倒排序，字典序升序排，遇到的第一个满足要求的element就是想要的那个。
+
+但其实我们也看到这个算法其实效率很低，s每次都要遍历，其实可以记下s中每个元素的出现位置来对算法进行优化，这里就先不写了，等dp那章再写。
+
+
+## [340. 至多包含 K 个不同字符的最长子串](https://leetcode.cn/problems/longest-substring-with-at-most-k-distinct-characters/description/)
+
+```C++
+class Solution {
+public:
+    int lengthOfLongestSubstringKDistinct(string s, int k) {
+        int len = s.size();
+        if (len == 1) return min(k, len);
+        if (k == 0) return 0;
+        int i = 0;
+        int j = 0;
+        int current_tokens = 0;
+        map<char, int> record;
+        int res = -1;
+        while(i < len && j < len){
+            if(record.contains(s[j]) && record[s[j]] > 0){
+                record[s[j]] += 1;
+                j++;
+            }else if(!record.contains(s[j]) || record[s[j]] == 0){
+                while(current_tokens >= k){
+                    record[s[i]] -= 1;
+                    if(record[s[i]] == 0) current_tokens -= 1;
+                    i++;
+                }
+                record[s[j]] = 1;
+                current_tokens += 1;
+                j++;
+            }
+            res = max(res, j - i);
+        }
+        return res;
+    }
+};
+```
+
+这道题可以用滑动窗口的方式解，窗口的长度没有明确限制，根据k动态调整，真正的限制是窗口内的不同字符数量最多为k个。因此可以用一个map来保存窗口内各个字符的个数，遍历整个字符串，如果当前窗口没满，就加不同字符；如果已经满了，遇到不同字符后需要将左端点移动直到字符数减少1. 每次都记录下当前窗口长度最后取最大值即可。
