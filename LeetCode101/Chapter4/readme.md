@@ -191,3 +191,72 @@ public:
 如果存在 nums[l] == nums[middle] == nums[r], 那么我们在不遍历数组的情况下是无法判断有序性的，因此此时只能去l++;r--来约束空间。
 
 当上述条件不满足时，即三者不等时，如果有nums[l] <= nums[middle], 那么就说明l ~ middle 有序的；如果有 nums[l] > nums[middle], 那么就说明他们之间有翻转，具体的二分赋值依旧按之前的逻辑就好了。
+
+
+## [154. 寻找旋转排序数组中的最小值 II](https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array-ii/description/)
+
+```C++
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int len = nums.size();
+        if (len == 1) return nums[0];
+        int l = 0;
+        int r = len - 1;
+        int middle = 0;
+        int res = 500000;
+        while(l <= r){
+            middle = (r - l) / 2 + l;
+            res = min(res, nums[middle]);
+            if(nums[middle] == nums[l] && nums[middle] == nums[r]){
+                r--;
+                l++;
+            }else if(nums[middle] < nums[l]){
+                //l ~ middle有旋转
+                r = middle - 1;
+            }else if(nums[middle] >= nums[l]){
+                // l~middle 无旋转
+                if(nums[middle] <= nums[r]){
+                    // l~r无旋转
+                    r = middle - 1;
+                }else{
+                    l = middle + 1;
+                }
+            }
+        }
+        return res;
+    }
+};
+```
+这道题其实就是上一道题的另一个版本，n次旋转就是在位置n进行一次旋转。具体的思路也是通过判断middle和l大小来判断是否存在旋转来变化l和r的值。
+
+## [540. 有序数组中的单一元素](https://leetcode.cn/problems/single-element-in-a-sorted-array/description/)
+
+
+```C++
+class Solution {
+public:
+    int singleNonDuplicate(vector<int>& nums) {
+        int len = nums.size();
+        if (len == 1) return nums[0];
+        int l = 0;
+        int r = len - 1;
+        int middle = 0;
+        while(l <= r){
+            middle = (r - l) / 2 + l;
+            if (l == r) return nums[l];
+            if (middle % 2 == 0){
+                if (nums[middle + 1] == nums[middle]) l = middle + 2;
+                else r = middle;
+            }
+            if (middle % 2 == 1){
+                if (nums[middle -1] == nums[middle]) l = middle + 1;
+                else r = middle;
+            }
+        }
+        return -1;
+    }
+};
+```
+
+假设单一位置下标为x，那么x左侧，若有偶数下标y，一定有 nums[y] == nums[y+1]; 在x右侧，若有奇数下标y，一定有nums[y-1] == nums[y]. 可以根据判断middle是否满足这两个条件，如果满足则当前middle一定在x左侧，调整l的大小。否则说明middle在右侧，调整r的大小即可。
