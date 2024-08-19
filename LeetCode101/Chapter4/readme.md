@@ -260,3 +260,68 @@ public:
 ```
 
 假设单一位置下标为x，那么x左侧，若有偶数下标y，一定有 nums[y] == nums[y+1]; 在x右侧，若有奇数下标y，一定有nums[y-1] == nums[y]. 可以根据判断middle是否满足这两个条件，如果满足则当前middle一定在x左侧，调整l的大小。否则说明middle在右侧，调整r的大小即可。
+
+
+## [4. 寻找两个正序数组的中位数](https://leetcode.cn/problems/median-of-two-sorted-arrays/description/)
+
+这道题有点难，我之前的搜索条件一直是ptr1, ptr2之前的数字之和为中位数前应该有的数字数量，但发现这个假设其实局限在了偶数长度中位数必须存在在nums1和nums2中各一个，后面看到了题解，发现可以通过求前k个数来找到中位数，先放题解:
+
+```C++
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int len1 = nums1.size();
+        int len2 = nums2.size();
+        int left = (len1 + len2 + 1) / 2;
+        int right = (len1 + len2 + 2) / 2;
+        // solution#1
+        // return (getKth(nums1, 0, len1 - 1, nums2, 0, len2 - 1, left) +getKth(nums1, 0, len1 - 1, nums2, 0, len2 - 1, right)) * 1.0 / 2;
+        
+        // solution#2
+        if ((len1 + len2) % 2 == 1) return getKth(nums1, nums2, (len1 + len2 + 1) / 2);
+        else return (getKth(nums1, nums2, (len1 + len2)/2 ) + getKth(nums1, nums2, (len1 + len2)/2 + 1)) * 1.0 / 2;
+    }
+    int getKth(vector<int>& nums1, int start1, int end1, vector<int>& nums2, int start2, int end2, int k){
+        int len1 = end1 - start1 + 1;
+        int len2 = end2 - start2 + 1;
+        if (len1 > len2) return getKth(nums2, start2, end2, nums1, start1, end1, k);
+
+        if (len1 == 0) return nums2[start2 + k - 1];
+        if (k == 1) return min(nums1[start1], nums2[start2]);
+
+        int idx_i = start1 + min(len1, k/2) - 1;
+        int idx_j = start2 + min(len2, k/2) - 1;
+
+        if(nums1[idx_i] >= nums2[idx_j]){
+            return getKth(nums1, start1, end1, nums2, idx_j + 1, end2, k - (idx_j - start2 + 1));
+        }else{
+            return getKth(nums1, idx_i + 1, end1, nums2, start2, end2, k - (idx_i - start1 + 1));
+        }
+    }
+
+    int getKth(vector<int>& nums1, vector<int>& nums2, int k){
+        int len1 = nums1.size();
+        int len2 = nums2.size();
+        int index1 = 0, index2 = 0;
+        while(true){
+            if (index1 == len1) return nums2[index2 + k - 1];
+            if (index2 == len2) return nums1[index1 + k - 1];
+            if (k == 1) return min(nums1[index1], nums2[index2]);
+
+            int newIndex1 = min(len1 - 1, index1 + k / 2 - 1);
+            int newIndex2 = min(len2 - 1, index2 + k / 2 - 1);
+
+            if (nums1[newIndex1] > nums2[newIndex2]){
+                k -= newIndex2 - index2 + 1;
+                index2 = newIndex2 + 1;
+            }else{
+                k -= newIndex1 - index1 + 1;
+                index1 = newIndex1 + 1;
+            }
+        }
+    }
+    
+};
+```
+
+第二个solution更好懂，我就按第二个代码捋一下思路: 每次循环都看数组从index1/2开始的第k/2 - 1个数字的值，其中较小的那个值及之前的一定不是第k小的数字, 然后调整k值和对应下标，直到nums1走到尽头，那么直接nums2取index2 + k -1即可。另一种情况也一样的操作。如果k==1，那么就说明要找当前子数组最小的数，就返回nums1[index1]和nums2[index2]中最小的那个即可。solution1其实是solution2的递归版本.
