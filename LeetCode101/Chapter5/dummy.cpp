@@ -88,6 +88,22 @@ void insertion_sort(std::vector<int>& arr){
     printToShell(arr);
 }
 
+void shell_sort(std::vector<int>& arr){
+    int len = arr.size();
+    for(int gap = len/2; gap > 0; gap /= 2){
+        for(int currentIndex = gap; currentIndex < len; ++ currentIndex){
+            int currentNumber = arr[currentIndex];
+            int prevIndex = currentIndex - gap;
+            while(prevIndex >= 0 && currentNumber < arr[prevIndex]){
+                arr[prevIndex + gap] = arr[prevIndex];
+                prevIndex -= gap;
+            }
+            arr[prevIndex + gap] = currentNumber;
+        }
+    }
+    printToShell(arr);
+}
+
 int main(){
     int n = 10;
     std::vector<int> testArr;
@@ -108,5 +124,6 @@ int main(){
     // opt_bubble_sort(testArr);
     // selection_sort(testArr);
     // selection_sort2(testArr);
-    insertion_sort(testArr);
+    // insertion_sort(testArr);
+    shell_sort(testArr);
 }

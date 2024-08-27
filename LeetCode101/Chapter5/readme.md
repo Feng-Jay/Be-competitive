@@ -45,7 +45,7 @@ void opt_bubble_sort(std::vector<int>& arr){
 
 额外讨论一下, bubble_sort是稳定算法吗？(即两个元素值相同时，排序后二者的相对位置不会改变)，答案是yes，因为只有在arr[j] > arr[j + 1]时才会进行交换。
 
-## 选择排序
+### 选择排序
 
 如名称所示，该排序方法为每次选择一个当前数组中最小(大)的元素，然后插入数组头(尾)。
 
@@ -90,7 +90,7 @@ void selection_sort2(std::vector<int>& arr){
 ```
 外层的循环只需要循环 len / 2次即可: 若长度为偶数，那么所有的元素都会被挑为min/max值；若长度为奇数，那么除了剩下的一个元素，剩下的元素都已经排好序，因此整个数组也是有序的。
 
-## 插入排序
+### 插入排序
 
 插入排序类似打牌，维护一个有序的部分数组，然后对每个新来的元素，找到应该插入的位置:
 
@@ -113,3 +113,30 @@ void insertion_sort(std::vector<int>& arr){
 在代码中，将第一个元素视为初始有序的数组，如果current数组元素比arr[j]小，那么就移动arr[j]。当跳出循环时有两种情况: 1. j == -1, 说明current比所有数组内容都小，因此arr[0]应该被置为current；2. current >= arr[j], 此时current应该插入在arr[j + 1]的位置。二者插入位置都为j + 1.
 
 同样我们分析其稳定性，由于判断条件是current < arr[j]时才会进行交换，因此当值相同时不会将原数组元素移动，因此是稳定的。
+
+
+## O(nlog(n))
+
+### 希尔排序
+
+希尔排序是插入排序的一个优化，可以从排序算法的本质上来理解希尔排序: 排序的根本目的是为了消除数组中全部的逆序对，之前提到的冒泡/选择/插入排序每次交换都只能消除一组逆序对，而希尔排序通过构造增量的方式可以一次交换消除多个逆序对，以此得到时间复杂度的降低:
+
+```C++
+void shell_sort(std::vector<int>& arr){
+    int len = arr.size();
+    for(int gap = len/2; gap > 0; gap /= 2){
+        for(int currentIndex = gap; currentIndex < len; ++ currentIndex){
+            int currentNumber = arr[currentIndex];
+            int prevIndex = currentIndex - gap;
+            while(prevIndex >= 0 && currentNumber < arr[prevIndex]){
+                arr[prevIndex + gap] = arr[prevIndex];
+                prevIndex -= gap;
+            }
+            arr[prevIndex + gap] = currentNumber;
+        }
+    }
+}
+```
+这里选择的增量是希尔在初稿论文中所用的希尔增量，即增量每次除2.
+
+### 
