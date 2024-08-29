@@ -139,4 +139,131 @@ void shell_sort(std::vector<int>& arr){
 ```
 这里选择的增量是希尔在初稿论文中所用的希尔增量，即增量每次除2.
 
-### 
+### 堆排序
+
+可以把堆看作一个完全二叉树，在完全二叉树中，节点i的左子节点为2*i + 1, 节点i的右子节点位 2 *i + 2，最后一个非叶子节点为len/2 - 1. 大(小)顶堆的含义是节点i一定大(小)于左右子节点:
+
+```C++
+void max_heap(std::vector<int>& arr, int i, int size){
+    int leftIndex = 2 * i + 1;
+    int rightIndex = leftIndex + 1;
+    int largestIndex = i;
+    if (leftIndex < size && arr[leftIndex] > arr[largestIndex]){
+        largestIndex = leftIndex;
+    }
+    if(rightIndex < size && arr[rightIndex] > arr[largestIndex]){
+        largestIndex = rightIndex;
+    }
+    if(largestIndex != i){
+        std::swap(arr[i], arr[largestIndex]);
+        max_heap(arr, largestIndex, size);
+    }
+}
+
+void build_heap(std::vector<int>& arr){
+    int len = arr.size();
+    for(int i = len / 2 - 1; i >= 0; --i){
+        max_heap(arr, i, len);
+    }
+}
+
+void heap_sort(std::vector<int>& arr){
+    build_heap(arr);
+    int len = arr.size();
+    for(int i = len - 1; i > 0; --i){
+        std::swap(arr[0], arr[i]);
+        max_heap(arr, 0, i);
+    }
+}
+```
+
+堆排序的过程中，首先自底向上构建大顶堆，然后选择堆顶元素后放入队尾，更新大顶堆。
+
+### 快速排序
+
+快排的核心思想是分治，即每次选一个pivot节点，使得pivot节点左侧数值都小于该节点，右侧节点数值都大于该节点，该节点此时位置就是最后的位置。然后分别对左右侧数组进行上述过程：
+
+```C++
+int partition(std::vector<int>& arr, int begin, int end){
+    int pivot = arr[begin];
+    int l = begin + 1;
+    int r = end;
+    while(l < r){
+        while(l < r && arr[l] < pivot) l++;
+        while(l < r && arr[r] > pivot) r--;
+        if (l != r){
+            std::swap(arr[l], arr[r]);
+            r--;
+        }
+    }
+    if(l == r && arr[r] > pivot) r--;
+    if(r != begin) std::swap(arr[begin], arr[r]);
+    return r;
+}
+
+void quick_sort(std::vector<int>& arr, int begin, int end){
+    int middle = partition(arr, begin, end);
+    if (middle != begin && middle != begin + 1)
+        quick_sort(arr, begin, middle - 1);
+    if (middle != end && middle != end - 1)
+        quick_sort(arr, middle + 1, end);
+}
+
+void quick_sort(std::vector<int>& arr){
+    quick_sort(arr, 0, arr.size() - 1);
+}
+```
+
+值得注意的就是`partition`函数中对特殊情况的处理，即while循环后两个特殊条件的判断
+
+
+### 归并排序
+
+我们已经很熟悉将两个有序数组合并为一个有序数组的算法了，归并排序的思想就是利用上述思想。但找到有序的数组是一个难点，冯诺依曼使用二分的方式来构造这样的有序数组:
+
+```C++
+void merge(std::vector<int>& arr, int begin, int end, std::vector<int>& result){
+    int end1 = (begin + end) / 2;
+    int begin2 = end1 + 1;
+    int begin1 = begin;
+    int end2 = end;
+    int index1 = begin1;
+    int index2 = begin2;
+    while(index1 <= end1 && index2 <= end2){
+        if(arr[index1] <= arr[index2]){
+            result[index1 + index2 - begin2] = arr[index1];
+            index1++;
+        }else{
+            result[index1 + index2 - begin2] = arr[index2];
+            index2++;
+        }
+    }
+    while (index1 <= end1) {
+        result[index1 + index2 - begin2] = arr[index1];
+        index1++;
+    }
+    while (index2 <= end2) {
+        result[index1 + index2 - begin2] = arr[index2];
+        index2++;
+    }
+    while(begin <= end){
+        arr[begin] = result[begin];
+        begin++;
+    }
+}
+
+void merge_sort(std::vector<int>& arr, int begin, int end, std::vector<int>& result){
+    if (begin == end) return;
+    int middle = (begin + end) / 2;
+    merge_sort(arr, begin, middle, result);
+    merge_sort(arr, middle + 1, end, result);
+    merge(arr, begin, end, result);
+}
+
+void merge_sort(std::vector<int>& arr){
+    std::vector<int> result(arr.size(), 0);
+    merge_sort(arr, 0, arr.size() - 1, result);
+}
+```
+
+即递归地二分该数组，若数组长度为1则必然有序，递归过程开始出栈。

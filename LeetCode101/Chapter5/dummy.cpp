@@ -104,6 +104,115 @@ void shell_sort(std::vector<int>& arr){
     printToShell(arr);
 }
 
+void max_heap(std::vector<int>& arr, int i, int size){
+    int leftIndex = 2 * i + 1;
+    int rightIndex = leftIndex + 1;
+    int largestIndex = i;
+    if (leftIndex < size && arr[leftIndex] > arr[largestIndex]){
+        largestIndex = leftIndex;
+    }
+    if(rightIndex < size && arr[rightIndex] > arr[largestIndex]){
+        largestIndex = rightIndex;
+    }
+    if(largestIndex != i){
+        std::swap(arr[i], arr[largestIndex]);
+        max_heap(arr, largestIndex, size);
+    }
+}
+
+void build_heap(std::vector<int>& arr){
+    int len = arr.size();
+    for(int i = len / 2 - 1; i >= 0; --i){
+        max_heap(arr, i, len);
+    }
+}
+
+void heap_sort(std::vector<int>& arr){
+    build_heap(arr);
+    int len = arr.size();
+    for(int i = len - 1; i > 0; --i){
+        std::swap(arr[0], arr[i]);
+        max_heap(arr, 0, i);
+    }
+    printToShell(arr);
+}
+
+
+int partition(std::vector<int>& arr, int begin, int end){
+    int pivot = arr[begin];
+    int l = begin + 1;
+    int r = end;
+    while(l < r){
+        while(l < r && arr[l] < pivot) l++;
+        while(l < r && arr[r] > pivot) r--;
+        if (l != r){
+            std::swap(arr[l], arr[r]);
+            r--;
+        }
+    }
+    if(l == r && arr[r] > pivot) r--;
+    if(r != begin) std::swap(arr[begin], arr[r]);
+    return r;
+}
+
+void quick_sort(std::vector<int>& arr, int begin, int end){
+    int middle = partition(arr, begin, end);
+    if (middle != begin && middle != begin + 1)
+        quick_sort(arr, begin, middle - 1);
+    if (middle != end && middle != end - 1)
+        quick_sort(arr, middle + 1, end);
+}
+
+void quick_sort(std::vector<int>& arr){
+    quick_sort(arr, 0, arr.size() - 1);
+    printToShell(arr);
+}
+
+
+void merge(std::vector<int>& arr, int begin, int end, std::vector<int>& result){
+    int end1 = (begin + end) / 2;
+    int begin2 = end1 + 1;
+    int begin1 = begin;
+    int end2 = end;
+    int index1 = begin1;
+    int index2 = begin2;
+    while(index1 <= end1 && index2 <= end2){
+        if(arr[index1] <= arr[index2]){
+            result[index1 + index2 - begin2] = arr[index1];
+            index1++;
+        }else{
+            result[index1 + index2 - begin2] = arr[index2];
+            index2++;
+        }
+    }
+    while (index1 <= end1) {
+        result[index1 + index2 - begin2] = arr[index1];
+        index1++;
+    }
+    while (index2 <= end2) {
+        result[index1 + index2 - begin2] = arr[index2];
+        index2++;
+    }
+    while(begin <= end){
+        arr[begin] = result[begin];
+        begin++;
+    }
+}
+
+void merge_sort(std::vector<int>& arr, int begin, int end, std::vector<int>& result){
+    if (begin == end) return;
+    int middle = (begin + end) / 2;
+    merge_sort(arr, begin, middle, result);
+    merge_sort(arr, middle + 1, end, result);
+    merge(arr, begin, end, result);
+}
+
+void merge_sort(std::vector<int>& arr){
+    std::vector<int> result(arr.size(), 0);
+    merge_sort(arr, 0, arr.size() - 1, result);
+    printToShell(arr);
+}
+
 int main(){
     int n = 10;
     std::vector<int> testArr;
@@ -125,5 +234,8 @@ int main(){
     // selection_sort(testArr);
     // selection_sort2(testArr);
     // insertion_sort(testArr);
-    shell_sort(testArr);
+    // shell_sort(testArr);
+    // heap_sort(testArr);
+    // quick_sort(testArr);
+    merge_sort(testArr);
 }
