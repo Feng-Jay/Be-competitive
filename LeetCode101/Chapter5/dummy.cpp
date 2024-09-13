@@ -213,6 +213,106 @@ void merge_sort(std::vector<int>& arr){
     printToShell(arr);
 }
 
+
+void count_sort(std::vector<int>& arr){
+    if(arr.size() < 2) return;
+    int len = arr.size();
+    int min = arr[0];
+    int max = arr[0];
+    for(int elem: arr){
+        if(elem < min) min = elem;
+        if(elem > max) max = elem;
+    }
+    int counting_len = max - min + 1;
+    std::vector<int> counting(counting_len, 0);
+    for(int elem: arr){
+        counting[elem - min]++;
+    }
+    int prevCount = 0;
+    for(int i = 0; i < counting_len; ++i){
+        int tmp = counting[i];
+        counting[i] = prevCount;
+        prevCount += tmp;
+    }
+    std::vector<int> result(len, 0);
+    for(int elem: arr){
+        result[counting[elem - min]] = elem;
+        counting[elem - min]++;
+    }
+    for(int i = 0; i < len; ++i){
+        arr[i] = result[i];
+    }
+    printToShell(arr);
+}
+
+void count_sort_reverse(std::vector<int>& arr){
+    if(arr.size() < 2) return;
+    int len = arr.size();
+    int min = arr[0];
+    int max = arr[0];
+    for(int elem: arr){
+        if(elem < min) min = elem;
+        if(elem > max) max = elem;
+    }
+    int counting_len = max - min + 1;
+    std::vector<int> counting(counting_len, 0);
+    for(int elem: arr){
+        counting[elem - min]++;
+    }
+    int prevCount = 0;
+    for(int i = 0; i < counting_len; ++i){
+        int tmp = counting[i];
+        counting[i] += prevCount - 1;
+        prevCount += tmp;
+    }
+    std::vector<int> result(len, 0);
+    for(int i = len - 1; i >= 0; --i){
+        result[counting[arr[i] - min]] = arr[i];
+        counting[arr[i] - min]--;
+    }
+    for(int i = 0; i < len; ++i){
+        arr[i] = result[i];
+    }
+    printToShell(arr);
+}
+
+
+void radix_sort(std::vector<int>& arr){
+    if (arr.size() < 2) return;
+    int len = arr.size();
+    int max_elem = 0;
+    for(int elem: arr){
+        if (std::abs(elem) > max_elem){
+            max_elem = std::abs(elem);
+        }
+    }
+    int max_digits_length = 0;
+    while(max_elem != 0){
+        max_elem /= 10;
+        max_digits_length++;
+    }
+    std::vector<int> counting(19, 0); // [-9, 9]
+    std::vector<int> result(len, 0);
+    int dev = 1;
+    for(int i = 0; i < max_digits_length; ++i){
+        for(int elem: arr){
+            int radix = elem / dev % 10 + 9;
+            counting[radix]++; 
+        }
+        for(int j = 1; j < counting.size(); ++j){
+            counting[j] += counting[j - 1];
+        }
+        for(int j = len - 1; j >= 0; --j){
+            int radix = arr[j] / dev % 10 + 9;
+            result[--counting[radix]] = arr[j];
+        }
+        arr.assign(result.begin(), result.end());
+        std::fill(counting.begin(), counting.end(), 0);
+        dev *= 10;
+    }
+    printToShell(arr);
+}
+
 int main(){
     int n = 10;
     std::vector<int> testArr;
@@ -237,5 +337,7 @@ int main(){
     // shell_sort(testArr);
     // heap_sort(testArr);
     // quick_sort(testArr);
-    merge_sort(testArr);
+    // merge_sort(testArr);
+    // count_sort_reverse(testArr);
+    radix_sort(testArr);
 }

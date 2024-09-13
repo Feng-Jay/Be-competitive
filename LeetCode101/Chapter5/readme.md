@@ -267,3 +267,120 @@ void merge_sort(std::vector<int>& arr){
 ```
 
 即递归地二分该数组，若数组长度为1则必然有序，递归过程开始出栈。
+
+
+## O(n)
+
+### 计数排序
+
+计数排序是一种通过对现有数据进行计数后再按顺序输出的方法，但其适用范围有限，例如只能用于整数排序...。其简易的思想可以理解为，通过统计数组中各个数字出现的次数后，然后按顺序从小到大依次输出对应次数的数字。但这种方法往往在实际应用中会丢失原本传进函数的对象，因此实际的计数排序会通过计数结果算出对应元素应该在的位置:
+
+```C++
+void count_sort(std::vector<int>& arr){
+    if(arr.size() < 2) return;
+    int len = arr.size();
+    int min = arr[0];
+    int max = arr[0];
+    for(int elem: arr){
+        if(elem < min) min = elem;
+        if(elem > max) max = elem;
+    }
+    int counting_len = max - min + 1;
+    std::vector<int> counting(counting_len, 0);
+    for(int elem: arr){
+        counting[elem - min]++;
+    }
+    int prevCount = 0;
+    for(int i = 0; i < counting_len; ++i){
+        int tmp = counting[i];
+        counting[i] = prevCount;
+        prevCount += tmp;
+    }
+    std::vector<int> result(len, 0);
+    for(int elem: arr){
+        result[counting[elem - min]] = elem;
+        counting[elem - min]++;
+    }
+    for(int i = 0; i < len; ++i){
+        arr[i] = result[i];
+    }
+}
+```
+
+也有一个倒序的版本:
+
+```C++
+void count_sort_reverse(std::vector<int>& arr){
+    if(arr.size() < 2) return;
+    int len = arr.size();
+    int min = arr[0];
+    int max = arr[0];
+    for(int elem: arr){
+        if(elem < min) min = elem;
+        if(elem > max) max = elem;
+    }
+    int counting_len = max - min + 1;
+    std::vector<int> counting(counting_len, 0);
+    for(int elem: arr){
+        counting[elem - min]++;
+    }
+    int prevCount = 0;
+    for(int i = 0; i < counting_len; ++i){
+        int tmp = counting[i];
+        counting[i] += prevCount - 1;
+        prevCount += tmp;
+    }
+    std::vector<int> result(len, 0);
+    for(int i = len - 1; i >= 0; --i){
+        result[counting[arr[i] - min]] = arr[i];
+        counting[arr[i] - min]--;
+    }
+    for(int i = 0; i < len; ++i){
+        arr[i] = result[i];
+    }
+}
+```
+
+
+### 基数排序
+
+基数排序就是通过对需要比较对象进行拆分，将其表达为多个基本数字来进行排序。以排整数数组为例，有两种比较策略，一种是LSD (least significant digital)，即从最低位开始；另一种是MSD (most significant digital)，即从最高位开始进行排序。通常来说LSD更为常用，更适合计算机进行处理:
+
+
+```C++
+void radix_sort(std::vector<int>& arr){
+    if (arr.size() < 2) return;
+    int len = arr.size();
+    int max_elem = 0;
+    for(int elem: arr){
+        if (std::abs(elem) > max_elem){
+            max_elem = std::abs(elem);
+        }
+    }
+    int max_digits_length = 0;
+    while(max_elem != 0){
+        max_elem /= 10;
+        max_digits_length++;
+    }
+    std::vector<int> counting(19, 0); // [-9, 9]
+    std::vector<int> result(len, 0);
+    int dev = 1;
+    for(int i = 0; i < max_digits_length; ++i){
+        for(int elem: arr){
+            int radix = elem / dev % 10 + 9;
+            counting[radix]++; 
+        }
+        for(int j = 1; j < counting.size(); ++j){
+            counting[j] += counting[j - 1];
+        }
+        for(int j = len - 1; j >= 0; --j){
+            int radix = arr[j] / dev % 10 + 9;
+            result[--counting[radix]] = arr[j];
+        }
+        arr.assign(result.begin(), result.end());
+        std::fill(counting.begin(), counting.end(), 0);
+        dev *= 10;
+    }
+}
+```
+
