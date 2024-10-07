@@ -384,3 +384,59 @@ void radix_sort(std::vector<int>& arr){
 }
 ```
 
+### 桶排序
+
+桶排序的思想很简单: 输入数据划分为n个区间，每个区间称为一个桶；遍历数组装桶；对每个桶使用其他排序算法进行排序;按顺序将结果回收。桶排实际应用较少，且在数据均匀分布时效率才比较高。
+
+主要考虑的因素有：1.桶的个数；2.桶的数据结构。桶数量少的话会导致时间复杂度取决于桶内排序算法(极端情况为1个桶)；桶数量多的话则内存空间占用很大，空桶多。如果使用数组的话则在较差情况下空间复杂度很高；使用链表的话可能会使排序算法效率下降。
+
+```C++
+void bucket_sort_arr(std::vector<int>& arr){
+    int len = arr.size();
+    if (len < 2) return;
+    // prepare buckets
+    int min_elem, max_elem;
+    min_elem = max_elem = arr[0];
+    for(int elem: arr){
+        min_elem = elem < min_elem ? elem : min_elem;
+        max_elem = elem > max_elem ? elem : max_elem;   
+    }
+    int range = max_elem - min_elem;
+    int NUMBER_OF_BUCKETS = 10;
+    int gap = range * 1.0 / (NUMBER_OF_BUCKETS - 1);
+    int** buckets = new int*[NUMBER_OF_BUCKETS];
+    for (int i = 0; i < NUMBER_OF_BUCKETS; ++i) {
+        buckets[i] = new int[len]();  // Initialize all to 0
+    }
+    int* bucketLengths = new int[NUMBER_OF_BUCKETS]();
+    
+    // for(int i =0; i< NUMBER_OF_BUCKETS; ++i){
+    //     std::cout<<bucketLengths[i] <<";";
+    // }
+
+    // put elems into buckets
+    for(int elem: arr){
+        int bucketIndex = (int) ((elem - min_elem) / gap);
+        buckets[bucketIndex][bucketLengths[bucketIndex]] = elem;
+        bucketLengths[bucketIndex]++;
+    }
+
+    // sort each buckets
+    int index = 0;
+    for(int i = 0; i < NUMBER_OF_BUCKETS; ++i){
+        if (bucketLengths[i] <= 0) continue;
+        bucket_sort_helper_insert_sort(buckets[i], bucketLengths[i]);
+        std::copy(buckets[i], buckets[i] + bucketLengths[i], arr.begin() + index);
+        index += bucketLengths[i];
+    }
+}
+```
+
+算法逻辑很简单。接下来对复杂度进行分析:
+1. 首先需要遍历数组得到数组数据范围并装桶: O(n)
+2. 然后需要对每个桶进行排序, 假设数据均匀分布，按排序算法时间复杂度可以分为: O(n^2/k), O(n * log(n/k)), 因此可以看到排序的时间复杂度是和桶数量密切相关的，一般情况下只要桶数量合适，时间复杂度为O(n)
+3. 排序完成后，收集结果: O(n)
+
+因此时间复杂度为O(n), 但此时常数项可能比较大，不一定比O(nlogn)的算法快。
+
+

@@ -313,6 +313,63 @@ void radix_sort(std::vector<int>& arr){
     printToShell(arr);
 }
 
+
+void bucket_sort_helper_insert_sort(int* arr, int size){
+    for(int i = 1; i < size; ++i){
+        int j = i - 1;
+        int current = arr[i];
+        while(j >=0 && current < arr[j]){
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = current;
+    }
+}
+
+
+void bucket_sort_arr(std::vector<int>& arr){
+    int len = arr.size();
+    if (len < 2) return;
+    // prepare buckets
+    int min_elem, max_elem;
+    min_elem = max_elem = arr[0];
+    for(int elem: arr){
+        min_elem = elem < min_elem ? elem : min_elem;
+        max_elem = elem > max_elem ? elem : max_elem;   
+    }
+    int range = max_elem - min_elem;
+    int NUMBER_OF_BUCKETS = 10;
+    int gap = range * 1.0 / (NUMBER_OF_BUCKETS - 1);
+    int** buckets = new int*[NUMBER_OF_BUCKETS];
+    for (int i = 0; i < NUMBER_OF_BUCKETS; ++i) {
+        buckets[i] = new int[len]();  // Initialize all to 0
+    }
+    int* bucketLengths = new int[NUMBER_OF_BUCKETS]();
+    
+    // for(int i =0; i< NUMBER_OF_BUCKETS; ++i){
+    //     std::cout<<bucketLengths[i] <<";";
+    // }
+
+    // put elems into buckets
+    for(int elem: arr){
+        int bucketIndex = (int) ((elem - min_elem) / gap);
+        buckets[bucketIndex][bucketLengths[bucketIndex]] = elem;
+        bucketLengths[bucketIndex]++;
+    }
+
+    // sort each buckets
+    int index = 0;
+    for(int i = 0; i < NUMBER_OF_BUCKETS; ++i){
+        if (bucketLengths[i] <= 0) continue;
+        bucket_sort_helper_insert_sort(buckets[i], bucketLengths[i]);
+        std::copy(buckets[i], buckets[i] + bucketLengths[i], arr.begin() + index);
+        index += bucketLengths[i];
+    }
+    printToShell(arr);
+}
+
+
+
 int main(){
     int n = 10;
     std::vector<int> testArr;
@@ -339,5 +396,6 @@ int main(){
     // quick_sort(testArr);
     // merge_sort(testArr);
     // count_sort_reverse(testArr);
-    radix_sort(testArr);
+    // radix_sort(testArr);
+    bucket_sort_arr(testArr);
 }
