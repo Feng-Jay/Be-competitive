@@ -440,3 +440,37 @@ void bucket_sort_arr(std::vector<int>& arr){
 因此时间复杂度为O(n), 但此时常数项可能比较大，不一定比O(nlogn)的算法快。
 
 
+# LeetCode算法题
+
+## [215. 数组中的第K个最大元素](https://leetcode.cn/problems/kth-largest-element-in-an-array/description/)
+
+这道题思路还挺巧妙的，而且对时间复杂度要求也比较高。可以利用快排的思想，快排在每次将数组分为两半时，pivot节点所在的位置就是排序后所在位置，因此可以根据pivot的位置对空间进行剪枝：若pivot下标正好等于len - k, 直接返回；若pivot下标小于len - k, 那么目标元素在pivot右侧；否则在pivot左侧。
+
+```C++
+class Solution {
+public:
+   int findKthLargest(vector<int>& nums, int k) {
+        int len = nums.size();
+        return quickSelect(nums, 0, len - 1, len - k);
+    }
+
+    int quickSelect(vector<int>& nums, int l, int r, int k){
+        int partition = nums[l], i = l + 1, j = r;
+        while(true){
+            while(i <= r && nums[i] < partition) i++;
+            while(j >= l + 1 && nums[j] > partition) j--;
+            if(i >= j)break;
+            swap(nums[i], nums[j]);
+            i++;
+            j--;
+        }
+        swap(nums[j], nums[l]);
+
+        if(j == k)return nums[k];
+        else if(j > k)return quickSelect(nums,l, j - 1, k);
+        else return quickSelect(nums,j + 1, r, k);
+    }
+};
+```
+
+上面这个代码中的quickSelect函数比较有意思，需要注意的就是在while外面还有一次swap: 此时j对应的是小于<=nums[ l ]的一个数，需要把nums[l]放在这个位置, 但好像放在i - 1也行，我认为只要这个位置合理就可以。
