@@ -474,3 +474,66 @@ public:
 ```
 
 上面这个代码中的quickSelect函数比较有意思，需要注意的就是在while外面还有一次swap: 此时j对应的是小于<=nums[ l ]的一个数，需要把nums[l]放在这个位置, 但好像放在i - 1也行，我认为只要这个位置合理就可以。
+
+
+## [347. 前K个高频元素](https://leetcode.cn/problems/top-k-frequent-elements/description/)
+
+这道题用桶排序就行，首先统计每个元素出现的频率，然后根据频率对数组元素进行装桶:
+
+```C++
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        int len = nums.size();
+        int max_frequence = 0;
+        unordered_map<int, int> frequencies;
+        for (int i = 0; i < len; ++i){
+            frequencies[nums[i]]++;
+            max_frequence = std::max(max_frequence, frequencies[nums[i]]);
+        }
+        vector<vector<int>> buckets(max_frequence);
+        for(const auto& pair:frequencies){
+            buckets[pair.second - 1].push_back(pair.first);
+        }
+        vector<int> res;
+        for(int i = max_frequence - 1; i >= 0; --i){
+            if(buckets.size() == 0) continue;
+            for(int elem: buckets[i]) res.push_back(elem);
+            if (res.size() == k) return res;
+        }
+        return {};
+    }
+};
+```
+
+## [451. 根据字符出现频率排序](https://leetcode.cn/problems/sort-characters-by-frequency/description/)
+
+这道题和上一题类似，只不过最后构建字符串时需要把元素的频率也考虑进来:
+
+
+```C++
+class Solution {
+public:
+    string frequencySort(string s) {
+        int len = s.size();
+        unordered_map<char, int> frequencies;
+        int max_frequencies = 0;
+        for(int i = 0; i < len; ++i){
+            char elem = s[i];
+            frequencies[elem]++;
+            max_frequencies = max(frequencies[elem], max_frequencies);
+        }
+        string res = "";
+        vector<vector<char>> buckets(max_frequencies);
+        for(const auto& pair: frequencies){
+            buckets[pair.second - 1].push_back(pair.first);
+        }
+        for(int i = max_frequencies - 1; i >=0; --i){
+            for(char elem: buckets[i]) 
+                for(int j = 0; j <= i; ++j) 
+                    res += elem;
+        }
+        return res;
+    }
+};
+```
