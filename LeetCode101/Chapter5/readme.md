@@ -537,3 +537,70 @@ public:
     }
 };
 ```
+
+## [75. 颜色分类](https://leetcode.cn/problems/sort-colors/description/)
+
+荷兰国旗问题，对含有三个值的数组进行排序. 有两个思路:
+
+1. 双指针
+
+我们可以用一个指针代表连续0序列结尾的下一个位置，一个指针代表连续1序列结尾的下一个位置. 当遍历数组遇到1时，直接对nums[ ptr1 ]和nums[ i ]进行交换即可；但遇到0时需要额外考虑一下，可能ptr0指向了一个1，如果此时将1交换过去的话，就会出错(在连续2的序列中插入了一个1)，要额外判断一下:
+
+```C++
+void sortColors(vector<int>& nums) {
+    int len = nums.size();
+    int ptr_red, ptr_white;
+    ptr_red = ptr_white = 0;
+    for(int i = 0; i < len; ++i){
+        if(nums[i] == 0){
+            std::swap(nums[ptr_red], nums[i]);
+            if(ptr_red < ptr_white) swap(nums[ptr_white], nums[i]);
+            ptr_red++;
+            ptr_white++;
+        }
+        else if(nums[i] == 1){
+            cout<<ptr_white<<endl;
+            std::swap(nums[ptr_white], nums[i]);
+            ptr_white++;
+        }
+    }
+}
+```
+
+2. 循环不变量
+
+这个思路是看题解看到的，本质就是有一些变量之间的约束和条件是在遍历数据时永远满足的，这个例子里就是0一定在1前，1一定在2前:
+
+即[0, zero) 全为0，[zero, one) 全为1，[two, len)全为2.
+
+在这里我们用3个指针分别代表zero, one, two (zero, i, two). 用i来遍历数组，zero和two根据i取值不断更新，当one==two时，数组完全满足要求，继续遍历则退出循环。
+
+```C++
+void sortColors(vector<int>& nums){
+    int len = nums.size();
+    if (len < 2) return;
+    int zero = 0;
+    int i = 0;
+    int two = len;
+    while (i < two){
+        if(nums[i] == 0){
+            swap(nums[zero], nums[i]);
+            zero++;
+            i++;
+        }else if(nums[i] == 1){
+            i++;
+        }else{
+            two --;
+            swap(nums[i], nums[two]);
+        }
+    }
+}
+```
+
+当遇到0时，交换对应元素，zero和i都++；
+
+遇到1时，i++即可
+
+遇到2时，交换对应元素，two--
+
+当i == two时， 有即[0, zero) 全为0，[zero, two) 全为1，[two, len)全为2, 满足要求
