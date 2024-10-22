@@ -145,3 +145,55 @@ public:
     }
 };
 ```
+
+
+## [46. 全排列](https://leetcode.cn/problems/permutations/description/)
+
+这道题使用的是回溯法，回溯法和之前用的dfs差不多，但就像算法名字一样，回溯后需要保证状态回复原来的状态。例如这道题，全排列可以视为i位置的元素和(i, n)的元素分别swap, 然后i+1, i+2,..., n - 1 分别进行上述过程，在进入递归时，需要把当前数组的引用(当前状态)传进去；当前递归结束后，需要把数组的恢复之前的样子，然后继续循环递归:
+
+```C++
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        int len = nums.size();
+        vector<vector<int>> ret;
+        search(nums, ret, 0);
+        return ret;
+    }
+    void search(vector<int>& nums, vector<vector<int>>& ret, int current_index){
+        if(current_index == nums.size() - 1)
+            ret.push_back(nums);
+        for(int i = current_index; i < nums.size(); ++i){
+            std::swap(nums[current_index], nums[i]);
+            search(nums, ret, current_index + 1);
+            std::swap(nums[current_index], nums[i]);
+        }
+    }
+};
+```
+
+## [77. 组合](https://leetcode.cn/problems/combinations/description/)
+
+组合和排列差不多，只是元素间顺序没有要求。在这道题中，我们需要返回一个由长度为k的vector组成的vector，对于每个vector，我们可以对元素i分别赋 [1, n]的值，假设为m，然后对i+1 分别赋[m+1, n]的值，递归直到为第k位赋值:
+
+```C++
+class Solution {
+public:
+    vector<vector<int>> combine(int n, int k) {
+        vector<vector<int>> ret;
+        vector<int> all_numbers;
+        for(int i = 1; i <= n; ++i) all_numbers.push_back(i);
+        vector<int> tmp(k, 0);
+        search(ret, all_numbers, tmp, 0, 0, k);
+        return ret;
+    }
+
+    void search(vector<vector<int>>& ret, vector<int>& nums, vector<int>& current_nums, int current_index, int pos, int k){
+        if (current_index == k) {ret.push_back(current_nums); return;}
+        for(int i = pos; i < nums.size(); ++i){
+            current_nums[current_index] = nums[i];
+            search(ret, nums, current_nums, current_index + 1, i + 1, k);
+        }
+    }
+};
+```
