@@ -197,3 +197,239 @@ public:
     }
 };
 ```
+
+## [79.单词搜索](https://leetcode.cn/problems/word-search/description/)
+
+这道题是一道经典的回溯题，在二维数组中搜索一个单词。这道题的难点在于如何防止重复访问同一个点多次，我们可以使用一个visited数组来记录已经访问过的位置，并且在回溯结束后将其置为0，这样就可以防止重复访问。
+
+```Java
+class Solution {
+    public boolean exist(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
+        int[][] visited = new int[m][n];
+        for(int i = 0; i < m; ++i){
+            for (int j = 0; j < n; ++j){
+                if (visit(board, visited, i, j, word, 0)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean visit(char[][] board, int[][] visited, int x, int y, String word, int current){
+        if(visited[x][y] == 1 || board[x][y] != word.charAt(current)){
+            return false;
+        }
+        if (current == word.length() - 1){
+            return true;
+        }
+        visited[x][y] = 1;
+        int[] moveX = {0, 0, -1, 1};
+        int[] moveY = {-1, 1, 0, 0};
+        for (int i = 0; i < 4; ++i){
+            int currentX = x + moveX[i];
+            int currentY = y + moveY[i];
+            if (currentX < 0 || currentX >= board.length) continue;
+            if (currentY < 0 || currentY >= board[0].length) continue;
+            if (visit(board, visited, currentX, currentY, word, current + 1))
+                return true;
+        }
+        visited[x][y] = 0;
+        return false;
+    }
+}
+```
+
+## [51. N皇后问题](https://leetcode.cn/problems/n-queens/)
+
+经典的N皇后问题，较难的点是如何记录斜线上是否有皇后，我们可以使用两个数组来记录主对角线和副对角线上的情况。所有左对角线上的元素有一个特征: row - column是一个常数，所有右对角线上的元素有一个特征: row + column是一个常数。由于左对角线上元素可能存在负数，我们可以将所有元素加上n-1，这样就可以保证所有的元素都是非负的。
+
+然后按行遍历，对于每一行，我们尝试放置皇后在列i上，如果该位置不满足条件(即在该列或对角线上已经有皇后)，则跳过。否则，我们将继续在下一行放置皇后，直到所有行都放置了皇后。
+
+
+```Java
+
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        List<Integer> queens = new ArrayList<>(Collections.nCopies(n, 0));
+        List<Boolean> columnClear = new ArrayList<>(Collections.nCopies(n, Boolean.FALSE));
+        List<Boolean> ldiagClear = new ArrayList<>(Collections.nCopies(2 * n - 1, Boolean.FALSE));
+        List<Boolean> rdiagClear = new ArrayList<>(Collections.nCopies(2 * n - 1, Boolean.FALSE));
+        List<List<String>> ans = new ArrayList<>();
+        search(queens, columnClear, ldiagClear, rdiagClear, ans, 0, n);
+        return ans;
+    }
+
+    public void search(List<Integer> queens, List<Boolean> columnClear, List<Boolean> ldiagClear,
+                       List<Boolean> rdiagClear, List<List<String>> ans, int row, int n){
+        if (row == n){
+            List<String> tmp = new ArrayList<>();
+            for (int q: queens){
+                char[] oneRow = new char[n];
+                Arrays.fill(oneRow, '.');
+                oneRow[q] = 'Q';
+                tmp.add(new String(oneRow));
+            }
+            ans.add(tmp);
+            return;
+        }
+        for(int i = 0; i < n; ++i){
+            if (columnClear.get(i) || ldiagClear.get(row - i + n - 1) || rdiagClear.get(i + row))
+                continue;
+            columnClear.set(i, true);
+            ldiagClear.set(row - i + n - 1, true);
+            rdiagClear.set(i + row, true);
+            queens.set(row, i);
+            search(queens, columnClear, ldiagClear, rdiagClear, ans, row + 1, n);
+            // queens.set(i, 0);
+            columnClear.set(i, false);
+            ldiagClear.set(row - i + n - 1, false);
+            rdiagClear.set(i + row, false);
+        }
+    }
+}
+```
+
+## [934. 最短的桥](https://leetcode.cn/problems/shortest-bridge/)
+
+这道题可以使用广度优先搜索的方式，首先找到一个岛屿，并把该岛屿的所有点变为2，然后从该岛屿的所有点开始进行广度优先搜索，直到找到另一个岛屿。
+
+```Java
+class Solution {
+    public int shortestBridge(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        Queue<List<Integer>> queue = new LinkedList<>();
+        // use dfs to get the first island, and use queue to store the water.
+        boolean b = false;
+        for(int i = 0; i < m; ++i){
+            if (b) break;
+            for (int j = 0; j < n; ++j){
+                if (grid[i][j] == 1){
+                    dfs(grid, i, j, m, n, queue);
+                    b = true;
+                    break;
+                }
+            }
+        }
+        int res = 0;
+        int[] directions = {0, 1, 0, -1, 0};
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            while(size-- > 0){
+                List<Integer> tmp = queue.poll();
+                int tmpX = tmp.get(0); int tmpY = tmp.get(1);
+                for(int i = 0; i < 4; ++i){
+                    int newX = tmpX + directions[i];
+                    int newY = tmpY + directions[i + 1];
+                    if (newX < 0 || newX >= m || newY < 0 || newY >= n)
+                        continue;
+                    if (grid[newX][newY] == 1){return res;}
+                    if (grid[newX][newY] == 0){
+                        queue.add(Arrays.asList(newX, newY));
+                        grid[newX][newY] = 2;
+                    }
+                }
+            }
+            res += 1;
+        }
+        return -1; 
+    }
+
+    public void dfs(int [][] grid, int x, int y, int m, int n, Queue<List<Integer>> queue){
+        if (grid[x][y] == 2){
+            return;
+        }
+        if(grid[x][y] == 0){
+            return;
+        }
+        if(grid[x][y] == 1){
+            queue.add(Arrays.asList(x, y));
+        }
+        grid[x][y] = 2;
+        int[] directions = {0, 1, 0, -1, 0};
+        for(int i = 0; i < 4; ++i){
+            int newX = x + directions[i];
+            int newY = y + directions[i + 1];
+            if (newX < 0 || newX >= m || newY < 0 || newY >= n){
+                continue;
+            }
+            dfs(grid, newX, newY, m, n, queue);
+        }
+    }
+}
+```
+
+## [126. 单词接龙 II](https://leetcode.cn/problems/word-ladder-ii/description/)
+
+这道题挺难的，一方面要搜索到目标单词，这部分需要用到广度优先搜索，另一方面要得到所有可能的路径，这部分需要用到回溯。是两种方法的结合。在搜索过程中为了记录路径，我们保存了一个Map来记录每一个单词的前驱节点。
+
+```Java
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        Queue<String> queue = new LinkedList<String>();
+        Map<String, List<String>> from = new HashMap<String, List<String>>();
+        Map<String, Integer>  steps = new HashMap<String, Integer>();
+        Set<String> allWords = new HashSet<>(wordList);
+        List<List<String>> ans = new ArrayList<>();
+        allWords.remove(beginWord);
+        int step = 1;
+        boolean found = false;
+        int wordLen = beginWord.length();
+        queue.add(beginWord);
+        steps.put(beginWord, 0);
+        
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int i = 0; i < size; ++i){
+                String currentWord = queue.poll();
+                System.out.println(currentWord);
+                for (int j = 0; j < wordLen; ++j){
+                    for(int m = 0; m < 26; ++m){
+                        char newChar = (char) (m + 'a');
+                        String newWord = currentWord.substring(0, j) + newChar + currentWord.substring(j + 1);
+                        if (steps.containsKey(newWord) && steps.get(newWord) == step){
+                            from.get(newWord).add(currentWord);
+                        }
+                        if (!allWords.contains(newWord))
+                            continue;
+                        allWords.remove(newWord);
+                        queue.add(newWord);
+                        steps.put(newWord, step);
+                        from.putIfAbsent(newWord, new ArrayList<>());
+                        from.get(newWord).add(currentWord);
+                        if (newWord.equals(endWord)){
+                            found = true;
+                        }
+                    }
+                }
+            }
+            step += 1;
+            if (found){
+                break;
+            }
+        }
+        if(found){
+            Deque<String> path = new ArrayDeque<>();
+            path.add(endWord);
+            backTracing(beginWord, endWord, from, path, ans);
+        }
+        return ans;
+    }
+
+    public void backTracing(String src, String dst, Map<String, List<String>> from, Deque<String> path, List<List<String>> ans){
+        if (src.equals(dst)){
+            ans.add(new ArrayList<>(path));
+            return;
+        }
+        // System.out.println(src);
+        for(String word: from.get(dst)){
+            path.addFirst(word);
+            backTracing(src, word, from, path, ans);
+            path.removeFirst();
+        }
+    }
+}
+```
